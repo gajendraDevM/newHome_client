@@ -43,8 +43,12 @@ export default function CreateEmployeeF() {
 
     const onFinish = (values) => {
         console.log('Success:', values);
+
+        values.image = imge
+        values.image_id = id_imge
+
         dispatch(createEmployee(values))
-        form.resetFields()
+        // form.resetFields()
       };
 
 
@@ -199,12 +203,11 @@ export default function CreateEmployeeF() {
         {/* </Upload> */}
       </Form.Item>
 
-      <Form.Item label="employee_images">
-        <Input.Group compact>
+ 
 
         <Form.Item
-        name="image"
-        label="Image"
+        name="image_id"
+        label="Id image"
    
       >
         {/* <Upload name="image" action={keyUri + `/api/upload`} listType="picture"> */}
@@ -215,23 +218,7 @@ export default function CreateEmployeeF() {
         {/* </Upload> */}
       </Form.Item>
 
-      <Form.Item
-        name="image_id"
-  
-   
-    
-      >
-        {/* <Upload name="image" action={keyUri + `/api/upload`} listType="picture"> */}
-          <Button type="primary" onClick={handleIDImage} icon={<CloudUploadOutlined className=" text-xl text-green-600" />}> upload</Button> <br/>
 
-          {imge && <img className="my-4" src={imge} alt="imgee" width="120px"/>}
-
-        {/* </Upload> */}
-      </Form.Item>
-
-
-        </Input.Group>
-      </Form.Item>
 
 
       <Form.Item

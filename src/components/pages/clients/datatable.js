@@ -1,17 +1,28 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {Table, Space} from 'antd'
-import {FaRegEdit, FaRegTrashAlt} from 'react-icons/fa'
+import {FaRegEdit,  FaRegTrashAlt, FaTrashAlt} from 'react-icons/fa'
+import {AiOutlineClose} from 'react-icons/ai'
+
+
 import {Link} from 'react-router-dom'
-import { deleteClient} from '../../../api/clientSlice'
+import { deleteClient, deleteManyClient} from '../../../api/clientSlice'
 import {useDispatch} from 'react-redux'
-import moment from 'moment'
+// import moment from 'moment'
 import DeleteConfirm from '../../shared/deleteConfirm'
+import ExcelBtn from '../../shared/exportExcel'
+import Search from '../../shared/search'
+import styled from 'styled-components'
+import { motion } from "framer-motion";
+
 export default function Datatable({data}) {
 
 
     const dispatch = useDispatch()
+    const [selectionType, setSelectionType] = useState('checkbox');
+    const [selectionKey, setSelectionKey] = useState([]);
 
-    
+
+
     const confirm = (e, id) => {
         dispatch(deleteClient(id._id))
        
@@ -20,6 +31,7 @@ export default function Datatable({data}) {
       const cancel = (e) =>{
         return null
       }
+
 
 
     const columns = [
@@ -97,9 +109,76 @@ export default function Datatable({data}) {
       ];
 
 
+      const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+
+
+          setSelectionKey(selectedRowKeys)
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        getCheckboxProps: (record) => ({
+          disabled: record.name === 'Disabled User',
+          // Column configuration not to be checked
+          name: record.name,
+        }),
+      };
+
+      const variants = {
+        open: { opacity: 1, y: 0 },
+        closed: { opacity: 0, y: "3.5rem" },
+      }
+
     return (
-        <div>
-            <Table rowKey={record=>record._id} dataSource={data} columns={columns} />
+        <DataTableWrap>
+          <div className=" flex justify-between">
+            <Search title="client"/>
+            <ExcelBtn dataSource={data} columns={columns}/>
         </div>
+
+        <motion.div
+          animate={selectionKey.length>0 ? "open" : "closed"}
+          variants={variants}
+          // transition={{ duration: 0.2 }}
+        id="deleteItems" className="flex  justify-between px-4 multidelete items-center ">
+
+          <div className="flex justify-around" style={{color:"rgb(17 99 73)"}}>
+            <AiOutlineClose onClick={()=>setSelectionKey([])} className="mt-1 cursor-pointer"/>
+            &nbsp; &nbsp;{selectionKey.length}  selected</div>
+
+          <div className="flex justify-around " style={{color:"#f44336"}}>
+            <FaTrashAlt onClick={()=>dispatch(deleteManyClient(selectionKey))} className="mt-1 cursor-pointer"/>  &nbsp; delete</div>
+        </motion.div>
+         
+            <Table 
+      rowSelection={{
+        type: selectionType,
+        ...rowSelection,
+      }}         
+      
+      rowKey={record=>record._id}
+             dataSource={data} 
+             columns={columns} />
+        </DataTableWrap>
     )
 }
+
+
+const DataTableWrap = styled.div`
+
+position:relative;
+.multidelete{
+
+  position:absolute;
+  top:0%;
+  left:0%;
+  transform:translate(-50%, -50%);
+  width:100%;
+  height:3.5rem;
+ background-color:#d8f1e9;
+font-size:1rem;
+
+}
+
+
+
+`

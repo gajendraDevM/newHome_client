@@ -1,24 +1,27 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {fetchAllemployees, employeeSelector} from '../../../api/employeeSlice'
+import { fetchAllEmployees, employeeSelector} from '../../../api/empSlice'
 import Loader from '../../shared/spin'
 import DataTable from './datatable'
+import {authenticateSelector} from '../../../api/authSlice'
+
 export default function Employee() {
 
     const dispatch = useDispatch()
     const {loading, employee} = useSelector(employeeSelector)
+    const {current} = useSelector(authenticateSelector)
 
 useEffect(()=>{
 
-dispatch(fetchAllemployees())
+dispatch(fetchAllEmployees())
 
 
 }, [dispatch])
-
+console.log(employee);
     return (
         <div>
           {
-              loading? <Loader/> : <DataTable data={employee}/>
+              loading? <Loader/> : <DataTable data={(current.length> 0) ? current : employee}/>
           }
         </div>
     )

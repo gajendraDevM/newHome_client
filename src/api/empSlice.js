@@ -32,7 +32,7 @@ export const EmployeeSlice = createSlice({
       getEmployeeSuccess: (state, { payload }) =>{
 
         state.loading = false;
-        state.Employee  =  payload;
+        state.employee  =  payload;
 
         
 
@@ -73,7 +73,7 @@ const config = {
   };
 
 
-  export const fetchAllEmployees = (values) => async dispatch =>{
+  export const fetchAllEmployees = () => async dispatch =>{
     const key = 'login';
     dispatch(getEmployee())
 
@@ -81,7 +81,7 @@ const config = {
     try {
         
         const {data} = await axios.get(keyUri + '/api/employee')
-    
+    console.log(data);
         dispatch(getEmployeeSuccess(data))
 
     } catch (error) {
@@ -98,6 +98,8 @@ setTimeout(() => {
 }
 
 export const createEmployee = (values) => async dispatch =>{
+
+
     const key = 'login';
     dispatch(getEmployee())
     message.loading({ content: 'loading...', key })
@@ -211,4 +213,31 @@ setTimeout(() => {
 
 
 
+export const deleteManyEmployee = (values) => async dispatch =>{
+
+  console.log(values);
+  const key = 'delete';
+  dispatch(getEmployee())
+  message.loading({ content: 'loading...', key })
+
+  try {
+      
+      const {data} = await axios.post(keyUri + `/api/employee-many`, values, config )
+  
+      data &&  message.success({ content: data.msg, key, duration: 2 });
+
+      dispatch(fetchAllEmployees())
+
+  } catch (error) {
+
+dispatch(getEmployeeError())
+setTimeout(() => {
+
+  message.error({ content: error.response.data.msg, key, duration: 2 });
+}, 100) 
+
+      
+  }
+
+}
 

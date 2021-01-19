@@ -21,7 +21,7 @@ export default function SearchComponent({title}) {
 
 
     return (
-        <SearchWrap  className=" shadow ">
+        <SearchWrap >
              <Input className="px-4 py-2 focus:outline-none"
             suffix={  <SearchOutlined />
             }

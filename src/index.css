@@ -183,3 +183,15 @@ textarea.ant-input {
 .ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active {
   color: #f6fffc !important;
 }
+
+.ant-table-tbody  .ant-checkbox-inner::after {
+
+  top: 30% !important;
+  left: 12% !important;
+
+}
+
+.ant-table-tbody .ant-checkbox-inner {
+
+  overflow: hidden !important;
+}

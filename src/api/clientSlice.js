@@ -210,5 +210,34 @@ setTimeout(() => {
 }
 
 
+export const deleteManyClient = (values) => async dispatch =>{
+
+  console.log(values);
+  const key = 'delete';
+  dispatch(getClient())
+  message.loading({ content: 'loading...', key })
+
+  try {
+      
+      const {data} = await axios.post(keyUri + `/api/client-many`, values, config )
+  
+      data &&  message.success({ content: data.msg, key, duration: 2 });
+
+      dispatch(fetchAllClients())
+
+  } catch (error) {
+
+dispatch(getClientError())
+setTimeout(() => {
+
+  message.error({ content: error.response.data.msg, key, duration: 2 });
+}, 100) 
+
+      
+  }
+
+}
+
+
 
 
