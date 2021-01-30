@@ -5,9 +5,9 @@ import {Link, useLocation} from 'react-router-dom'
 import {authenticateSelector} from '../../api/authSlice'
 import {useSelector} from 'react-redux'
 import {
-  SnippetsOutlined,
+  ShopOutlined,
   QuestionCircleFilled,
-    FormOutlined,
+  SettingFilled,
     AppstoreFilled,
     UserOutlined ,
     UsergroupAddOutlined
@@ -64,6 +64,38 @@ const {pathname} = useLocation()
  <Menu.Item key="/dashboard/create-employee" >
  <Link to="/dashboard/create-employee">Create Employee</Link> 
    </Menu.Item>
+
+ </SubMenu>
+
+
+ <SubMenu  key="/dashboard/property" icon={<ShopOutlined />} title="Property">
+ 
+ <Menu.Item key="/dashboard/property"  >
+  <Link to="/dashboard/property">property List</Link>
+  
+   </Menu.Item>
+
+ <Menu.Item key="/dashboard/create-property" >
+ <Link to="/dashboard/create-property">Create property</Link> 
+   </Menu.Item>
+
+   <Menu.Item key="/dashboard/property-tab" >
+ <Link to="/dashboard/property-tab">Filter Tab</Link> 
+   </Menu.Item>
+
+ </SubMenu>
+
+ <SubMenu  key="/dashboard/setting" icon={<SettingFilled />} title="Setting">
+ 
+ <Menu.Item key="/dashboard/admin-setting"  >
+  <Link to="/dashboard/admin-setting">Admin Profile</Link>
+  
+   </Menu.Item>
+
+ <Menu.Item key="/dashboard/intial-setting" >
+ <Link to="/dashboard/intial-setting">Intial Setting</Link> 
+   </Menu.Item>
+
 
  </SubMenu>
 

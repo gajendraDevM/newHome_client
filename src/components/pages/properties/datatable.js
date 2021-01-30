@@ -5,7 +5,7 @@ import {AiOutlineClose} from 'react-icons/ai'
 
 
 import {Link} from 'react-router-dom'
-import { deleteClient, deleteManyClient} from '../../../api/clientSlice'
+import { deleteproperty, deleteManyproperty} from '../../../api/PropertySlice'
 import {useDispatch} from 'react-redux'
 // import moment from 'moment'
 import DeleteConfirm from '../../shared/deleteConfirm'
@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 
 export default function Datatable({data}) {
 
-
+console.log(data);
     const dispatch = useDispatch()
     const [selectionType, setSelectionType] = useState('checkbox');
     const [selectionKey, setSelectionKey] = useState([]);
@@ -24,7 +24,7 @@ export default function Datatable({data}) {
 
 
     const confirm = (e, id) => {
-        dispatch(deleteClient(id._id))
+        dispatch(deleteproperty(id._id))
        
       }
       
@@ -36,58 +36,40 @@ export default function Datatable({data}) {
 
     const columns = [
         {
-          title: 'client Name',
-          dataIndex: 'client_name',
-          key: 'client_name',
-          sorter: (a, b) => a.client_name.length - b.client_name.length,
+          title: 'property_name',
+          dataIndex: 'property_name',
+          key: 'property_name',
+          sorter: (a, b) => a.property_name.length - b.property_name.length,
           sortDirections: ['descend', 'ascend'],
-        },
-        
-        {
-          title: 'Customer Id',
-          dataIndex: '_id',
-          key: '_id',
         },
         {
           title: 'phone Number',
-          dataIndex: 'phone_number',
-          key: 'phone_number',
+          dataIndex: 'owner_info',
+          key: 'owner_info',
+          render:(data)=>{
+
+            return <h6>{data.phone_number}</h6>
+          }
         },
         {
           title: 'email',
-          dataIndex: 'email',
+          dataIndex: 'owner_info',
           key: 'email',
+          render:(data)=>{
+
+            return <h6>{data.email}</h6>
+          }
         },
         {
-            title: 'customer_type',
-            dataIndex: 'customer_type',
-            key: 'customer_type',
+            title: 'Area',
+            dataIndex: 'property_info',
+            key: 'Area',
+            render:(data)=>{
+
+              return <h6>{data.super_area}&nbsp;sqft</h6>
+            }
           },
-          {
-            title: 'Furnist',
-            dataIndex: 'isFurnist',
-            filters: [
-              {
-                text: 'furnist',
-                value: true,
-              },
-              {
-                text: 'non-furnist',
-                value: false,
-              }
-            ],
-
-
-            onFilter: (value, record) => {
-
-            return  record.isFurnist === value
-            },
-           render:(record)=>{
-
-            return  <p className="mb-0" style={{color:record?"green" : "blue"}}>{record? "Furnist" : "Non-Furnist"}</p>
-
-           }
-          },
+  
           {
             title: 'Action',
             key: 'action',
@@ -97,14 +79,14 @@ export default function Datatable({data}) {
             return  <Space size="middle" align="center">
                 
                 <h5 className="text-dark">
-                 <Link to={`/dashboard/client/${id._id}`}>
+                 <Link to={`/dashboard/property/${id._id}`}>
                   <FaRegEdit/> 
                    </Link> 
                   
                   
                   </h5>
               <h5>
-                  <DeleteConfirm confirm={(e)=>confirm(e, id)} title="blog" cancel={cancel} >
+                  <DeleteConfirm confirm={(e)=>confirm(e, id)} title="property" cancel={cancel} >
                       <FaRegTrashAlt   style={{cursor:"pointer", color:"red"}} />
                   </DeleteConfirm>
               </h5>
@@ -148,11 +130,11 @@ export default function Datatable({data}) {
         id="deleteItems" className="flex  justify-between px-4 multidelete items-center ">
 
           <div className="flex justify-around" style={{color:"rgb(17 99 73)"}}>
-   <AiOutlineClose onClick={()=>setSelectionKey([])} className="mt-1 cursor-pointer"/>
+            <AiOutlineClose onClick={()=>setSelectionKey([])} className="mt-1 cursor-pointer"/>
             &nbsp; &nbsp;{selectionKey.length}  selected</div>
 
           <div className="flex justify-around " style={{color:"#f44336"}}>
-            <FaTrashAlt onClick={()=>dispatch(deleteManyClient(selectionKey))} className="mt-1 cursor-pointer"/>  &nbsp; delete</div>
+            <FaTrashAlt onClick={()=>dispatch(deleteManyproperty(selectionKey))} className="mt-1 cursor-pointer"/>  &nbsp; delete</div>
         </motion.div>
          
             <Table 
@@ -180,7 +162,7 @@ position:relative;
   transform:translate(-50%, -50%);
   width:100%;
   height:3.5rem;
- background-color:#fff1f1;
+ background-color:#d8f1e9;
 font-size:1rem;
 
 }

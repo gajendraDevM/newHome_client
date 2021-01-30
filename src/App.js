@@ -15,7 +15,6 @@ function App() {
     <main className="App" className=" font-text">
 <PrivateRoute path="/dashboard" component={Dashboard} />
  <Route path="/" component={Login} exact/> 
-  {/* <Route path="/dashboard" component={Dashboard} exact/>  */}
 
     </main>
   

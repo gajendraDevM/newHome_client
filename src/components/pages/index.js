@@ -18,6 +18,11 @@ import CreateEmployee from './employees/createEmployee';
 import Employee from './employees';
 
 
+import Property from './properties/createProperty';
+import PropertyList from './properties';
+import Propertytab from './properties/propertytab';
+
+
 
 
 const {  Content } = Layout;
@@ -88,6 +93,11 @@ else{
 <Route  exact path={`${path}/create-employee`}  component={CreateEmployee} />
 <Route  exact path={`${path}/employee`}  component={Employee} />
 
+<Route  exact path={`${path}/property`}  component={PropertyList} />
+<Route  exact path={`${path}/create-property`}  component={Property} />
+<Route  exact path={`${path}/property-tab`}  component={Propertytab} />
+<Route  exact path={`${path}/intial-setting`}  component={Propertytab} />
+<Route  exact path={`${path}/admin-setting`}  component={Propertytab} />
 
 
 </Switch>

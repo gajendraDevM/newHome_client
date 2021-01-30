@@ -83,15 +83,6 @@ export default function CreateEmployeeF() {
       };
 
 
-      const normFile = (e) => {
-        console.log('Upload event:', e);
-      
-        if (Array.isArray(e)) {
-          return e;
-        }
-      
-        return e && e.file;
-      };
 
 
 
@@ -193,7 +184,7 @@ export default function CreateEmployeeF() {
         name="image"
         label="Image"
         valuePropName="file"
-        getValueFromEvent={normFile}
+       
       >
         {/* <Upload name="image" action={keyUri + `/api/upload`} listType="picture"> */}
           <Button type="primary" onClick={handleImage} icon={<CloudUploadOutlined className=" text-xl text-green-600" />}> upload</Button> <br/>

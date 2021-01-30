@@ -61,20 +61,7 @@ export default function Createclient() {
       };
 
 
-      const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-          <Select
-            style={{
-              width: 70,
-            }}
-          >
-            <Option value="91">+91</Option>
-            <Option value="1">+1</Option>
-
-            <Option value="87">+87</Option>
-          </Select>
-        </Form.Item>
-      );
+   
 
     return (
         <div>
@@ -201,8 +188,8 @@ export default function Createclient() {
           placeholder="Select Customer type"
           allowClear
         >
-          <Option value="male">Seller</Option>
-          <Option value="female">Buyer</Option>
+          <Option value="Seller">Seller</Option>
+          <Option value="Buyer">Buyer</Option>
      
         </Select>
       </Form.Item>
