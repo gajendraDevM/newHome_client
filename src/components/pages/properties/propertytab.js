@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Tabs, Row, Slider, Modal, Image, Col, Select } from 'antd';
+import { Tabs, Row, Slider, Modal, Image, Col, Select, Button, Drawer } from 'antd';
 import { fetchAllpropertys, fethFilterWithBetween, propertySelector } from '../../../api/PropertySlice'
 import { useDispatch, useSelector } from 'react-redux';
 import SpinLoading from '../../shared/spin';
@@ -11,7 +11,6 @@ import { Empty } from 'antd';
 import empltyimg from '../../../images/property.png'
 const { Search } = Input;
  const { TabPane } = Tabs;
-
 export default function Propertytab() {
 
 const dispatch = useDispatch()
@@ -48,7 +47,18 @@ setGallery(property_gallery);
 }
 
 
-const PropertyCard = ({property_gallery,owner_info, property_type, property_name,price_info, property_info}) =>{
+const PropertyCard = ({property_gallery,owner_info, property_type, property_name,price_info, furnished_info,  property_info}) =>{
+
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
+
 
 
 
@@ -66,13 +76,15 @@ className=" col-span-1 overflow-hidden bg-cover  "
 
 
 </motion.div>
-<div className=" col-span-4 px-3 py-3">
+<div className=" col-span-4 px-3 py-3" >
 
 <div className="flex justify-between items-center">
-<div>
+<div className="flex justify-start items-center ">
 <h5 className="text-xl text-brandColor">{property_name}</h5>
   
-<p ><b>Price:</b>&nbsp;<span>&#8377;</span>&nbsp;{price_info.total_price}</p>
+<p ><b>Price:</b>&nbsp;<span>&#8377;</span>&nbsp;{price_info.project_price}</p>
+
+<Button onClick={showDrawer} className="ml-4" size="small" type="primary">View More</Button>
 
 </div>
 
@@ -89,8 +101,8 @@ style={{backgroundColor:"var(--backgroundColor)",borderRadius:"5px", borderRight
 
 
 <div>
-<h6>Super Area</h6>
-<p>{property_info.super_area}&nbsp; sqft</p>
+<h6>Site Area</h6>
+<p>{property_info.site_area}&nbsp; sqft</p>
 
 </div>
 
@@ -126,7 +138,7 @@ style={{backgroundColor:"var(--backgroundColor)",borderRadius:"5px", borderRight
 </div>
 
 <div>
-<h6>Sale Type</h6>
+<h6>Possession</h6>
 <p>{property_info.construction_status}</p>
 
 </div>
@@ -183,8 +195,8 @@ style={{backgroundColor:"#f5f5f5",borderRadius:"5px", borderRight:"3px solid gre
 </div>
 
 <div>
-<h6>Furnishing</h6>
-<p>{property_info.furnished_status}</p>
+<h6>Furnished Status</h6>
+<p>{furnished_info.furnished_status}</p>
 
 </div>
 
@@ -195,6 +207,8 @@ style={{backgroundColor:"#f5f5f5",borderRadius:"5px", borderRight:"3px solid gre
 
 
 <Modal width={1000} footer={false}
+
+
  title="Property Gallery" visible={isModalVisible} 
  onCancel={()=>setIsModalVisible(false)}>
   <div className="grid grid-cols-2 gap-5 ">
@@ -217,6 +231,387 @@ gallery.length > 0 && gallery.map((item, i)=>{
      }
      </div>
       </Modal>
+  
+  
+  <Drawer    
+        placement="right"
+        width="45%"
+        closable={false}
+        onClose={onClose}
+        visible={visible}>
+
+
+<h2 className="text-md p-2 rounded mb-3 " style={{backgroundColor:"var(--backgroundColor)"}}>Owner Info</h2>
+
+
+<div className="grid grid-cols-4 gap-3 p_name">
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>email</p>
+  <b>{owner_info.email}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>
+keys</p>
+  <b>{owner_info.keys}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>
+phone_number</p>
+  <b>{owner_info.phone_number}</b>
+
+</div>
+
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>
+key_relation</p>
+  <b>{owner_info.key_relation}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>
+service_charges</p>
+  <b>{owner_info.service_charges}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>
+owner_locality</p>
+  <b>{owner_info.owner_locality}</b>
+
+</div>
+  
+</div>
+
+<br/>
+<br/>
+
+
+<h2 style={{backgroundColor:"var(--backgroundColor)"}} className="text-md p-2 rounded mb-3" >Property Info</h2>
+<div className="grid grid-cols-4 gap-3 p_name">
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>site area</p>
+  <b>{property_info.site_area}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>built area</p>
+<b>{property_info.builtup_area}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>site area</p>
+<b>{property_info.site_area}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>rent</p>
+<b>{property_info.rent}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>Deposite</p>
+<b>{property_info.deposit}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>power</p>
+<b>{property_info.power}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>build_effeciency</p>
+<b>{property_info.build_effeciency}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>escalation</p>
+<b>{property_info.escalation}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>ownership_type</p>
+<b>{property_info.ownership_type}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>lock_in</p>
+<b>{property_info.lock_in}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>rent_free_period</p>
+<b>{property_info.rent_free_period}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>Notice Period</p>
+<b>{property_info.notice_period}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>sale_type</p>
+<b>{property_info.sale_type}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>store_room</p>
+<b>{property_info.store_room}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>balconies</p>
+<b>{property_info.balconies}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>property_facing</p>
+<b>{property_info.property_facing}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>car_parking</p>
+<b>{property_info.car_parking}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>bath_room</p>
+<b>{property_info.bath_room}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>bed_room</p>
+<b>{property_info.bed_room}</b>
+
+</div>
+
+
+
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>floor</p>
+<b>{property_info.floor}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>total_floor</p>
+<b>{property_info.total_floor}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>construction_status</p>
+<b>{property_info.construction_status}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>property_age</p>
+<b>{property_info.property_age}</b>
+
+</div>
+
+</div>
+
+<br/>
+<br/>
+
+<h2
+style={{backgroundColor:"var(--backgroundColor)"}}
+ className="text-md p-2 rounded mb-3" >Furnished Info</h2>
+<div className="grid grid-cols-4 gap-3 p_name">
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>furnished_status</p>
+  <b>{furnished_info.furnished_status}</b>
+
+</div>
+
+{
+
+furnished_info.furnished_status !== "unfurnished" && <>
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>discussion_room</p>
+  <b>{furnished_info.discussion_room}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>board_room</p>
+  <b>{furnished_info.board_room}</b>
+
+</div>
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>training_room</p>
+  <b>{furnished_info.training_room}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>conference_room</p>
+  <b>{furnished_info.conference_room}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>electrical_room</p>
+  <b>{furnished_info.electrical_room}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>server_room</p>
+  <b>{furnished_info.server_room}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>EPABX</p>
+  <b>{furnished_info.EPABX}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>pantry</p>
+  <b>{furnished_info.pantry}</b>
+
+</div>
+
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>airconditioning</p>
+  <b>{furnished_info.airconditioning}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>project_head</p>
+  <b>{furnished_info.project_head}</b>
+
+</div>
+
+
+<div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
+
+<p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>date_of_furnishing</p>
+  <b>{furnished_info.date_of_furnishing}</b>
+
+</div>
+
+
+</>
+
+}
+</div>
+
+
+  </Drawer>
+  
   </PropertyCardWrap>
 
 }
@@ -225,6 +620,8 @@ gallery.length > 0 && gallery.map((item, i)=>{
 const PropertyCardWrap = styled.div`
  /* box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12); */
 border-radius:1rem;
+
+
 
 p{
 
@@ -314,7 +711,7 @@ const activeFilter = (checked, currFilter) =>{
 
 
 
-    <TabPane tab="Builder"    key="builder">
+    <TabPane tab="Commercial" key="commercial">
       
     {
 
@@ -335,7 +732,7 @@ const activeFilter = (checked, currFilter) =>{
     })
   }
     </TabPane>
-    <TabPane tab="Agent"  key="agent">
+    <TabPane tab="Residential" key="residential">
     {
     loading ? <SpinLoading/> : filterActive ? filterProperty.map((item, i)=>{
 
@@ -410,8 +807,8 @@ disabled={filterActive? false : true}
          4:'4',
          6:'6',
          8:'8',
-         10:'10',
-         12:'12',
+         10:'10'
+
        
        
         }}
@@ -424,3 +821,14 @@ disabled={filterActive? false : true}
         </Row>
     )
 }
+
+
+
+const PropertyTabWrap = styled.div `
+
+
+
+
+
+
+`
