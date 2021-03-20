@@ -1,10 +1,12 @@
 import React,{ useEffect, useState} from 'react'
 import { Form, Input, DatePicker, Button, Select, Radio, Space, InputNumber } from 'antd';
 import {propertySelector, createproperty} from '../../../api/PropertySlice'
+import {clientSelector, fetchAllClients, fetchOneClient} from '../../../api/clientSlice'
+
 import {useDispatch, useSelector} from 'react-redux'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { CloudUploadOutlined  } from '@ant-design/icons';
-import {creatPropertySettings, PropertySettingSelector, fetchAllPropertySettings} from '../../../api/propertySettings'
+import {PropertySettingSelector, fetchAllSettings, fetchAllPropertySettings} from '../../../api/propertySettings'
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -45,30 +47,51 @@ export default function CreatePropertySec() {
  const [imge, setImge] = useState([])
 
  const [tvalue, setTValue] = useState('rent');
+ const [loan, setLoan] = useState('no');
 
 
+const { settings } = useSelector(PropertySettingSelector)
+const { client, current_client } = useSelector(clientSelector)
 
- 
 
  useEffect(()=>{
 
   dispatch(fetchAllPropertySettings())
-  
+    dispatch(fetchAllSettings())
+    dispatch(fetchAllClients())
+
   // form.setFields({furnished_status:'furnished'})
   }, [dispatch])
 
 
+console.log(settings);
+
+let commercial = settings.filter( item=>{
+
+  return item.property_type === 'commercial'
+
+})
+
+let residential = settings.filter( item =>{
+
+  return item.property_type === 'residential'
+
+})
+
+let warehouse = settings.filter(item =>{
+
+  return item.property_type === 'warehouse'
+
+})
 
 
     const onFinish = (values) => {
   
         values.property_gallery = imge
+         values.property_type.property_catagory = value
 
-        // console.log(values.Price_info);
 
-        // values.Price_info.unit =  values.prefix
-console.log(values);
-        // dispatch(createproperty(values))
+        dispatch(createproperty(values))
         // form.resetFields()
         // setImge([])
       };
@@ -110,8 +133,15 @@ const fhandleChange =(value) =>{
 
 }
 
+const [ existclient, setExistClient ] = useState('new_property')
 
 
+const ExistClient = (e) =>{
+
+  setExistClient(e.target.value);
+
+
+}
 
 
 
@@ -129,6 +159,26 @@ const fhandleChange =(value) =>{
 
           setValue(e.target.value);
          }
+
+ const handleLoan = (e) =>{
+
+
+          setLoan(e.target.value);
+         }
+const [current_c, setCurrentC] = useState(null)
+
+    const handleChangeClient = (value) =>{
+
+      setCurrentC(value)
+       dispatch(fetchOneClient(value));
+
+    }
+
+
+
+
+
+
 
 
          const prefixSelector = (
@@ -148,16 +198,14 @@ const fhandleChange =(value) =>{
       name="basic"
       form={form}
       initialValues={{
-        remember: true,
         prefix: 'Lac',
-
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
         <div className="grid grid-cols-5 ">
 
-  <div className=" col-span-3 pr-3 leftform" style={{overflowY:"auto"}}>
+  <div className=" col-span-3 pr-3 leftform " style={{overflowY:"auto"}}>
 
 
       <Form.Item
@@ -175,22 +223,7 @@ const fhandleChange =(value) =>{
 
 
      
-      <Form.Item
-        label="property Price"
-        name={["price_info", "project_price"]}
-        rules={[
-          {
-            required: true,
-            message:  ' is Required ',
-          },
-        ]}
-     
-      >
 
-     
-      <InputNumber 
-       placeholder="in Lac" addonBefore={prefixSelector} style={{ width: '50%' }}  />
-      </Form.Item>
 
 
 
@@ -240,6 +273,8 @@ const fhandleChange =(value) =>{
         <Radio.Group defaultValue="residential" onChange={onChangeProperty}>
           <Radio value="residential">Residential</Radio>
           <Radio value="commercial">Commercial</Radio>
+          <Radio value="wharehouse">WhareHouse</Radio>
+
         
         </Radio.Group>
       </Form.Item>
@@ -256,22 +291,30 @@ const fhandleChange =(value) =>{
         >
 
           {
-value === 'residential' && <>
-          <Option value="Flat">Flat</Option>
-          <Option value="House/villa">House/Villa</Option>
-          <Option value="plot/land">Plot/Land</Option> </>
+value === 'residential' && residential.map((item, i)=>{
+
+  return <option key={i} value={item.property}>{item.property}</option>
+
+})
 
           }
 
 {
-value === 'commercial' && <>
-          <Option value="office_space">Office Space</Option>
-          <Option value="shop/showroom">Shop/Showroom</Option>
-          <Option value="commercial land">Commercial Land</Option>
+value === 'commercial' && commercial.map((item, i)=>{
 
-         <Option value="warehouse/godown">Warehouse/Godown</Option>
-          <Option value="industriel_building">Industriel Building</Option>
-          <Option value="industriel_shed">Industriel Shed</Option> </>
+  return <option key={i} value={item.property}>{item.property}</option>
+
+})
+
+
+          }
+
+{
+value === 'wharehouse' && warehouse.map((item, i)=>{
+
+  return <option key={i} value={item.property}>{item.property}</option>
+
+})
 
 
           }
@@ -288,18 +331,59 @@ value === 'commercial' && <>
         <Radio.Group defaultValue="rent" onChange={onChangeTProperty}>
           <Radio value="rent">Rent</Radio>
           <Radio value="lease">Lease</Radio>
-          <Radio value="buy">Buy</Radio>
+          <Radio value="seller">Seller</Radio>
 
         </Radio.Group>
+      </Form.Item>
+
+{ (tvalue === 'seller') &&  <>   <Form.Item  label="Bank Loan">
+        <Radio.Group  onChange={handleLoan} value={loan} >
+          <Radio value="yes">yes</Radio>
+          <Radio value="no">no</Radio>
+     
+
+        </Radio.Group>
+      </Form.Item>
+      
+ 
+</>
+      
+      }
+
+
+{
+
+(loan === 'yes') &&  <Form.Item  name='loan_amount' label="Bank Loan">
+      <Input placeholder="loan amount" style={{width:"50%"}}/>
+
+      </Form.Item>
+    } 
+
+
+      <Form.Item
+        label="property Price"
+        name={["property_info", "project_price"]}
+        rules={[
+          {
+            required: true,
+            message:  ' is Required ',
+          },
+        ]}
+     
+      >
+
+     
+      <Input
+       placeholder="in ruppes" addonBefore={prefixSelector} style={{ width: '50%' }}  />
       </Form.Item>
 
 
 
 
-
-
-
       <Form.Item label="Property Info">
+
+
+
         <Input.Group compact>
 
         <Form.Item
@@ -576,7 +660,26 @@ value === 'commercial' && <>
 
           </Form.Item>
 
+     { (value === 'residential') && <>   <Form.Item
+            name={['property_info', 'servent_room']}
+            noStyle
+            rules={[{ required: true, message: 'Balconies is required' }]}
+          >
+     
+     <InputNumber  style={{ width: '30%', marginTop:"1.5rem" }} placeholder="servent_room" />
 
+          </Form.Item>
+
+
+          <Form.Item
+            name={['property_info', 'servent_room_bathroom']}
+            noStyle
+            rules={[{ required: true, message: 'servent_room is required' }]}
+          >
+     
+     <InputNumber  style={{ width: '30%', marginTop:"1.5rem", marginLeft:"1rem" }} placeholder="servent_room_bathroom" />
+
+          </Form.Item> </>}
 
         </Input.Group>
       </Form.Item>
@@ -827,9 +930,9 @@ name='furnished_info'
    
     </div>
 
-    <div style={{height:"84vh", overflowY:"auto", backgroundColor:"#e4d0d06b"}} className="flex justify-center  col-span-2 pl-3">
+    <div style={{height:"84vh", overflowY:"auto", backgroundColor:"#e4d0d06b"}} className="flex justify-center   col-span-2 pl-3">
 
-<div >
+<div  className="w-full">
     <Form.Item
         name="property_gallery"
       
@@ -837,7 +940,7 @@ name='furnished_info'
 
           <Button type="primary" className="mt-5 mb-2" onClick={handleImage} icon={<CloudUploadOutlined className=" text-xl text-green-600" />}> upload property images</Button> <br/>
 
-<div className="grid grid-cols-5 gap-3">
+<div className="grid grid-cols-5 gap-3 ">
 {
 
 (imge.length > 0 ) && imge.map((item, i)=>{
@@ -860,84 +963,146 @@ name='furnished_info'
       </Form.Item>
 
 
-      <Form.Item name="owner_info">
+      <Form.Item>
+
+      <Radio.Group onChange={ExistClient} value={existclient}  size="middle">
+      <Radio.Button value="new_property">New Property</Radio.Button>
+      <Radio.Button value="exist_property">Exist Client Property</Radio.Button>
+ 
+    </Radio.Group> 
+        
+      </Form.Item>
+
+
+      {
+     existclient === 'exist_property' && <>
+
+      <Form.Item >
+
+        <Select placeholder="Client Name" value={current_c} style={{ width:'100%'}} onChange={handleChangeClient}>
+      {
+        client.map((item, i)=>{
+
+          return  <Option key={i}  value={item._id}>{item.client_name}</Option>
+
+ 
+        })
+      
+      }
+    </Select>
+
+      </Form.Item>
+
+
+      {  ( current_c   && current_client) && <div>
+       
+       <p>client_name:&nbsp;<b>{ current_client.client_name}</b></p>
+       <p>phone_number:&nbsp;<b>{ current_client.phone_number}</b></p>
+       <p>email:&nbsp;<b>{ current_client.email}</b></p>
+       <p>address:&nbsp;<b>{ current_client.address}</b></p>
+       <p>customer_type:&nbsp;<b>{ current_client.customer_type}</b></p>
+
+      </div>}
+
+
+
+     
+      <Form.Item >
+
+       <Input name="refference" placeholder="Refrence"/>
+
+      </Form.Item>
+
+
+
+      
+       </>
+
+      }
+      
+
+{
+
+existclient === 'new_property' && 
+<>
+<Form.Item name="owner_info">
      
 
 
+<Form.Item
+
+name={['owner_info', 'contact_by']}
+
+>
+<Input  style={{ width: '100%' }} placeholder="contact_by" />
+</Form.Item>
+
+<Form.Item   
+name={['owner_info', 'phone_number']}
+placeholder="phone_number"
+
+
+rules={[
+ {
+   required: true,
+   message: 'Please input your phone number!',
+ },
+]}
+>
+<Input
+  addonBefore="+91"
+  placeholder="primary phone Number"
+  style={{
+   width: '100%'
+ }}
+ 
+/>
+</Form.Item>
+
+<Form.Item > 
+<Form.List name={['owner_info', 'other_phone']} >
+{(fields, { add, remove }) => (
+  <>
+
+{fields.map(field => (
+      <Space key={field.key}   style={{display:"block"}}  align="center">
+      
         <Form.Item
-  
-        name={['owner_info', 'contact_by']}
-      
-      >
-        <Input  style={{ width: '100%' }} placeholder="contact_by" />
-      </Form.Item>
+        
+        style={{width:"100%"}}
+         {...field}
+         fieldKey={[field.fieldKey, 'other_phone']}
+       
+name={field.name }
+label={ field.name > 3 ? `other${field.name}` :  phoneMsg[field.name]   }
 
-      <Form.Item   
-      name={['owner_info', 'phone_number']}
-      placeholder="phone_number"
+>
+<Input
+  addonBefore="+91"
+ 
+  style={{
+    width: '100%',
+  }}
+/>
+<MinusCircleOutlined style={{color:"var(--brandColor)"}} className="float-right mt-2" onClick={() => remove(field.name)} />
+</Form.Item>
+     
+        
+      </Space>
+    ))}
 
-   
-       rules={[
-         {
-           required: true,
-           message: 'Please input your phone number!',
-         },
-       ]}
-     >
-       <Input
-          addonBefore="+91"
-          placeholder="primary phone Number"
-          style={{
-           width: '100%'
-         }}
-         
-       />
-     </Form.Item>
 
-      <Form.Item > 
-      <Form.List name={['owner_info', 'other_phone']} >
-        {(fields, { add, remove }) => (
-          <>
+<Form.Item >
+      <Button type="dashed"     onClick={() => add()} block icon={<PlusOutlined />}>
+        Add phone Number
+      </Button>
+    </Form.Item>
 
-      {fields.map(field => (
-              <Space key={field.key}   style={{display:"block"}}  align="center">
-              
-                <Form.Item
-                
-                style={{width:"100%"}}
-                 {...field}
-                 fieldKey={[field.fieldKey, 'other_phone']}
-               
-        name={field.name }
-        label={ field.name > 3 ? `other${field.name}` :  phoneMsg[field.name]   }
-      
-      >
-        <Input
-          addonBefore="+91"
-         
-          style={{
-            width: '100%',
-          }}
-        />
-        <MinusCircleOutlined style={{color:"var(--brandColor)"}} className="float-right mt-2" onClick={() => remove(field.name)} />
-      </Form.Item>
-             
-                
-              </Space>
-            ))}
-
-      
-        <Form.Item >
-              <Button type="dashed"     onClick={() => add()} block icon={<PlusOutlined />}>
-                Add phone Number
-              </Button>
-            </Form.Item>
-
-            </>
-        )}
-      </Form.List>
-      </Form.Item>
-  </Form.Item>
+    </>
+)}
+</Form.List>
+</Form.Item>
+</Form.Item>
 
 
 
@@ -947,126 +1112,130 @@ name='furnished_info'
 
 <Input.Group compact>
 
-    <Form.Item
-        name={["owner_info", 'keys']}
-        style={{border:"none"}}
+<Form.Item
+name={["owner_info", 'keys']}
+style={{border:"none"}}
 
-       rules={[
-          {
-            required: true,
-            message: 'Please input your keys!',
-          },
-        ]}>
-      
-      <InputNumber  style={{ width: '100%', border:"none" }} placeholder="keys" />
+rules={[
+  {
+    required: true,
+    message: 'Please input your keys!',
+  },
+]}>
 
-       </Form.Item>
+<InputNumber  style={{ width: '100%', border:"none" }} placeholder="keys" />
 
-
-
-       <Form.Item
-        name={["owner_info", 'key_relation']}
-        style={{border:"none"}}
-       rules={[
-          {
-            required: true,
-            message: 'Please input your key_relation!',
-          },
-        ]}>
-      
-      <Input  style={{ width: '100%' }} placeholder="key_relation" />
-
-       </Form.Item>
+</Form.Item>
 
 
-       <Form.Item
-        name={["owner_info", 'service_charges']}
-        style={{border:"none"}}
 
-       rules={[
-          {
-            required: true,
-            message: 'Please input your service_charges!',
-          },
-        ]}>
-      
-      <InputNumber  style={{ width: '97%', border:"none" }} placeholder="service_charges" />
+<Form.Item
+name={["owner_info", 'key_relation']}
+style={{border:"none"}}
+rules={[
+  {
+    required: true,
+    message: 'Please input your key_relation!',
+  },
+]}>
 
-       </Form.Item>
-       </Input.Group>
-    
+<Input  style={{ width: '100%' }} placeholder="key_relation" />
+
+</Form.Item>
 
 
-       <Form.Item
- name={['owner_info', 'email']}
+<Form.Item
+name={["owner_info", 'service_charges']}
+style={{border:"none"}}
 
-       
-        rules={[
-          {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-      >
-        <Input  style={{ width: '100%' }} placeholder="email"/>
-      </Form.Item>
+rules={[
+  {
+    required: true,
+    message: 'Please input your service_charges!',
+  },
+]}>
 
- 
+<InputNumber  style={{ width: '97%', border:"none" }} placeholder="service_charges" />
+
+</Form.Item>
+</Input.Group>
 
 
-       <Form.Item
-        name={["owner_info", 'land_mark']}
-       rules={[
-          {
-            required: true,
-            message: 'Please input your land_mark!',
-          },
-        ]}>
-      
-      <Input placeholder="land_mark" />
 
-       </Form.Item>
+<Form.Item
+name={['owner_info', 'email']}
+
+
+rules={[
+  {
+    type: 'email',
+    message: 'The input is not valid E-mail!',
+  },
+  {
+    required: true,
+    message: 'Please input your E-mail!',
+  },
+]}
+>
+<Input  style={{ width: '100%' }} placeholder="email"/>
+</Form.Item>
 
 
 
 
-       <Form.Item
+<Form.Item
+name={["owner_info", 'land_mark']}
+rules={[
+  {
+    required: true,
+    message: 'Please input your land_mark!',
+  },
+]}>
 
-        name={["owner_info", 'owner_locality']}
-       rules={[
-          {
-            required: true,
-            message: 'Please input your locality!',
-          },
-        ]}>
-                        <Input placeholder="locality" />
+<Input placeholder="land_mark" />
 
-
-       </Form.Item>
-
-      <Form.Item
-  
-        name={["owner_info", 'owner_address']}
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <TextArea rows={3} placeholder="Address" />
-      </Form.Item>
+</Form.Item>
 
 
 
-      <Form.Item name="description"  rules={[{ required: true }]}>
-       <TextArea rows={3} placeholder="description"  />
-      </Form.Item>
 
+<Form.Item
+
+name={["owner_info", 'owner_locality']}
+rules={[
+  {
+    required: true,
+    message: 'Please input your locality!',
+  },
+]}>
+                <Input placeholder="locality" />
+
+
+</Form.Item>
+
+<Form.Item
+
+name={["owner_info", 'owner_address']}
+rules={[
+  {
+    required: true,
+    message: 'Please input your username!',
+  },
+]}
+>
+<TextArea rows={3} placeholder="Address" />
+</Form.Item>
+
+
+
+<Form.Item name="description"  rules={[{ required: true }]}>
+<TextArea rows={3} placeholder="description"  />
+</Form.Item>
+</>
+
+}
+
+     
 
       <Form.Item {...tailLayout}>
         <Button type="primary" className="min-w-full" htmlType="submit">

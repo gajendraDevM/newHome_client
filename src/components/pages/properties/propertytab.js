@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Tabs, Row, Slider, Modal, Image, Col, Select, Button, Drawer } from 'antd';
+import { Tabs, Row, Slider, Modal, Image, Col, Radio, Button, Drawer } from 'antd';
 import { fetchAllpropertys, fethFilterWithBetween, propertySelector } from '../../../api/PropertySlice'
 import { useDispatch, useSelector } from 'react-redux';
 import SpinLoading from '../../shared/spin';
@@ -18,6 +18,8 @@ const {loading, property} = useSelector(propertySelector)
 const [isModalVisible, setIsModalVisible] = useState(false);
 const [tabkey, setTabkey] = useState(false);
 const [filterProperty, setFilterProperty] = useState([])
+const [filterPropertyBhk, setFilterPropertyBhk] = useState([])
+
 const [filterActive, setFilterActive] = useState(false)
 const [currentTab, setCurrentTab] = useState([])
 const [gallery, setGallery] = useState([])
@@ -82,7 +84,7 @@ className=" col-span-1 overflow-hidden bg-cover  "
 <div className="flex justify-start items-center ">
 <h5 className="text-xl text-brandColor">{property_name}</h5>
   
-<p ><b>Price:</b>&nbsp;<span>&#8377;</span>&nbsp;{price_info.project_price}</p>
+<p ><b>Price:</b>&nbsp;<span>&#8377;</span>&nbsp;{property_info.project_price}{property_info.price_unit}</p>
 
 <Button onClick={showDrawer} className="ml-4" size="small" type="primary">View More</Button>
 
@@ -196,7 +198,7 @@ style={{backgroundColor:"#f5f5f5",borderRadius:"5px", borderRight:"3px solid gre
 
 <div>
 <h6>Furnished Status</h6>
-<p>{furnished_info.furnished_status}</p>
+<p>{furnished_info && furnished_info.furnished_status}</p>
 
 </div>
 
@@ -500,7 +502,7 @@ owner_locality</p>
 
 <br/>
 <br/>
-
+{/* 
 <h2
 style={{backgroundColor:"var(--backgroundColor)"}}
  className="text-md p-2 rounded mb-3" >Furnished Info</h2>
@@ -509,7 +511,7 @@ style={{backgroundColor:"var(--backgroundColor)"}}
 <div className=" px-2 shadow" style={{backgroundColor:"#f5f5f5"}}>
 
 <p style={{color:"", margin:"0", fontWeight:"semi-bold"}}>furnished_status</p>
-  <b>{furnished_info.furnished_status}</b>
+  <b>{furnished_info && furnished_info.furnished_status}</b>
 
 </div>
 
@@ -607,7 +609,7 @@ furnished_info.furnished_status !== "unfurnished" && <>
 </>
 
 }
-</div>
+</div> */}
 
 
   </Drawer>
@@ -636,7 +638,7 @@ h6{
 
 `
 
-
+const [client_type, setClient] = useState('rent')
 
 
 const onAfterChange  = (value, filter) => {
@@ -645,12 +647,15 @@ const onAfterChange  = (value, filter) => {
 
   const f = property.filter(item =>{
 
+if(item.property_type.client_catagory === client_type) {
 
-    return item.price_info.total_price <= value[1] && item.price_info.total_price >= value[0]
+  
+  return item.property_info.project_price <= value[1] && item.property_info.project_price >= value[0]
+
+}
 
   })
 
- 
 
 setFilterProperty(f)
 
@@ -658,7 +663,6 @@ setFilterProperty(f)
 
 const activeFilter = (checked, currFilter) =>{
 
-  console.log(checked, currFilter);
 
   if(checked) {
 
@@ -673,8 +677,36 @@ const activeFilter = (checked, currFilter) =>{
 
 }
 
+let L = (client_type === 'seller') ? 'Cr' : 'L'
 
 
+const handleFilterBHK = (value) =>{
+
+const fg = filterProperty.filter((item)=>{
+ console.log(value, item.property_info.bed_room);
+    return item.property_info.bed_room <= value 
+  
+  })
+
+  setFilterPropertyBhk(fg)
+
+}
+
+
+const onChange = e => {
+  setClient(e.target.value);
+const filterbyclient =  property.filter(item=>{
+
+
+        return item.property_type.client_catagory === e.target.value
+
+  
+
+  })
+
+  setFilterProperty(filterbyclient);
+
+};
 
     return (
         <Row gutter={20}>
@@ -748,25 +780,44 @@ const activeFilter = (checked, currFilter) =>{
   }
     </TabPane>
 
+    <TabPane tab="Wharehouse" key="wharehouse">
+    {
+    loading ? <SpinLoading/> : filterActive ? filterProperty.map((item, i)=>{
+
+
+      return filterProperty.length > 0 ? <PropertyCard {...item} key={i}/> : <h5 className="my-10">No Property Availaible !</h5>
+
+    }) :   property.map((item, i)=>{
+
+
+      return <PropertyCard {...item} key={i}/>
+
+    })
+  }
+    </TabPane>
+
   </Tabs>
  </Col>
 
  <Col span={6} >
  
  <h1>Filtering</h1>
+ <h4 className="my-5 ml-2">Applay Filter &nbsp; <Switch size="small"  onChange={(checked)=>activeFilter(checked, 'price') } /></h4>
 
+
+ <Radio.Group disabled={filterActive? false : true} onChange={onChange} value={client_type} defaultValue="residential" size="middle">
+      <Radio.Button value="rent">Rent</Radio.Button>
+      <Radio.Button value="lease">Lease</Radio.Button>
+      <Radio.Button value="seller">Seller</Radio.Button>
+    </Radio.Group> 
 
 <br/>
-
+<br/>
 <SearchSelect tabtitle={tabkey} filter="furnished_status"/>
 
 <br/><br/>
 
-<SearchSelect tabtitle={tabkey} filter="bath_room"/>
 
-<br/><br/>
-
-<h4 className="my-5 ml-2">Filter By Price &nbsp; <Switch size="small"  onChange={(checked)=>activeFilter(checked, 'price') } /></h4>
 
 
 <Slider
@@ -774,12 +825,12 @@ disabled={filterActive? false : true}
       range
       step={10}
       marks ={
-        {5: '5L',
-        20:'20L',
-         40:'40L',
-         60:'60L',
-         80:'80L',
-         100:'1C',
+        {5: '5' + L,
+        20:'20' + L,
+         40:'40'+ L,
+         60:'60'+ L,
+         80:'80'+ L,
+         100:'100' + L + '+',
        
        
         }
@@ -795,13 +846,12 @@ disabled={filterActive? false : true}
 
 <h4>Filter By BedRoom</h4>
 <Slider
-   
+   disabled={filterActive ? false : true}
    step={1}
       min={1}
       max={10}
     defaultValue={2}
-    disabled
-      onAfterChange={(value)=>  dispatch(fethFilterWithBetween('bath_room', value))}
+      onAfterChange={handleFilterBHK}
       marks ={
         {2: '2',
          4:'4',

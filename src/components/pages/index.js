@@ -21,6 +21,7 @@ import Employee from './employees';
 import Property from './properties/createProperty';
 import PropertyList from './properties';
 import Propertytab from './properties/propertytab';
+import Setting from './settings/adminSetting';
 
 
 
@@ -97,7 +98,7 @@ else{
 <Route  exact path={`${path}/create-property`}  component={Property} />
 <Route  exact path={`${path}/property-tab`}  component={Propertytab} />
 <Route  exact path={`${path}/intial-setting`}  component={Propertytab} />
-<Route  exact path={`${path}/admin-setting`}  component={Propertytab} />
+<Route  exact path={`${path}/admin-setting`}  component={Setting} />
 
 
 </Switch>

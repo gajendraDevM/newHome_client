@@ -112,3 +112,58 @@ dispatch(getPropertySettingError())
     }
 
 }
+
+
+export const fetchSettings = (values) => async dispatch =>{
+  dispatch(getPropertySetting())
+
+let datavalue = {
+
+  property_type:values.value,
+  property:values.text,
+
+
+}
+
+  try {
+      
+      const {data} = await axios.post(keyUri + '/api/setting', datavalue, config)
+
+       message.success('success!')
+      dispatch(fetchAllSettings())
+      setTimeout(()=>{
+         window.location.reload()
+      }, 1000)
+     
+
+  } catch (error) {
+
+dispatch(getPropertySettingError())
+
+
+      
+  }
+
+}
+
+
+export const fetchAllSettings = () => async dispatch =>{
+  dispatch(getPropertySetting())
+
+
+  try {
+      
+      const {data} = await axios.get(keyUri + '/api/setting')
+
+      console.log(data);
+      dispatch(getPropertySettingSuccess(data.settings))
+
+  } catch (error) {
+
+dispatch(getPropertySettingError())
+
+
+      
+  }
+
+}

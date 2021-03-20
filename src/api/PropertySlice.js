@@ -107,10 +107,10 @@ const config = {
     } catch (error) {
 
 dispatch(getPropertyError())
-setTimeout(() => {
+// setTimeout(() => {
 
-    message.error({ content: error.response.data.msg, key, duration: 2 });
-  }, 100) 
+//     message.error({ content: error.response.data.msg, key, duration: 2 });
+//   }, 100) 
 
         
     }

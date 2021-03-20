@@ -89,23 +89,6 @@ export default function Createclient() {
         <Input />
       </Form.Item>
 
-      <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-          {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
       <Form.Item   
        name="phone_number"
        label="Phone"
@@ -123,6 +106,13 @@ export default function Createclient() {
          }}
        />
      </Form.Item>
+
+
+
+
+  
+
+   
 
  <Form.Item    {...tail2Layout}> 
       <Form.List name="other_phone" >
@@ -169,6 +159,26 @@ export default function Createclient() {
         )}
       </Form.List>
       </Form.Item>
+
+      <Form.Item
+        name="email"
+        label="E-mail"
+        rules={[
+          {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          },
+          {
+            required: true,
+            message: 'Please input your E-mail!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+
+
 
       <Form.Item
         label="Address"

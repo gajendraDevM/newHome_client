@@ -88,7 +88,7 @@ const {pathname} = useLocation()
  <SubMenu  key="/dashboard/setting" icon={<SettingFilled />} title="Setting">
  
  <Menu.Item key="/dashboard/admin-setting"  >
-  <Link to="/dashboard/admin-setting">Admin Profile</Link>
+  <Link to="/dashboard/admin-setting">Form Setting</Link>
   
    </Menu.Item>
 
