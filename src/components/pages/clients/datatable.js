@@ -68,8 +68,7 @@ export default function Datatable({data}) {
             title: 'Budget',
             dataIndex: 'bugjet_info',
             render:(budjet =>{
-              console.log(budjet);
-          return   <p>{budjet.bugjet_price}</p>
+          return   <p className="mb-0">{budjet.bugjet_price}</p>
             }),
             key: 'client_requirement',
           }, 
@@ -84,13 +83,13 @@ export default function Datatable({data}) {
             dataIndex: 'location',
             render:(loc =>{
      
-          return   <p>{loc.locality}</p>
+          return   <p className="mb-0">{loc.locality}</p>
             }),
             key: 'customer_type',
           },
           {
             title: 'Furnished',
-            dataIndex: 'isFurnist',
+            dataIndex: 'isfurnished',
             filters: [
               {
                 text: 'Furnished ',
@@ -109,7 +108,7 @@ export default function Datatable({data}) {
             },
            render:(record)=>{
 
-            return  <p className="mb-0" style={{color:record?"green" : "blue"}}>{record? "Furnist" : "Non-Furnist"}</p>
+            return  <p className="mb-0" style={{color:record?"green" : "blue"}}>{record? "Furnished" : "Unfurnished"}</p>
 
            }
           },
