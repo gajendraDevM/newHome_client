@@ -92,7 +92,6 @@ dispatch(getPropertySettingError())
 }
 
   export const fetchAllPropertySettings = () => async dispatch =>{
-    const key = 'login';
     dispatch(getPropertySetting())
 
 

@@ -17,7 +17,7 @@ dispatch(fetchAllClients())
 
 
 }, [dispatch])
-console.log(current);
+
     return (
         <div>
             

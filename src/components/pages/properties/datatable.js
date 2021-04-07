@@ -36,19 +36,36 @@ console.log(data);
 
     const columns = [
         {
-          title: 'property_name',
-          dataIndex: 'property_name',
-          key: 'property_name',
+          title: 'Name',
+          dataIndex: 'project_name',
+          key: 'project_name',
           sorter: (a, b) => a.property_name.length - b.property_name.length,
           sortDirections: ['descend', 'ascend'],
+        },  {
+          title: 'Type',
+          dataIndex: 'property_type',
+          render:(text)=>{
+ return <h6>{text.property_type_info}</h6>
+
+          },
+          key: 'property_type',
+        
         },
         {
-          title: 'phone Number',
+          title: 'Mobile Number',
           dataIndex: 'owner_info',
           key: 'owner_info',
           render:(data)=>{
 
             return <h6>{data.phone_number}</h6>
+          }
+        },{
+          title: 'Budjet',
+          dataIndex: 'property_info',
+          key: 'email',
+          render:(data)=>{
+
+            return <h6>{data.project_price} {data.price_unit}</h6>
           }
         },
         {
@@ -59,14 +76,22 @@ console.log(data);
 
             return <h6>{data.email}</h6>
           }
+        }, {
+          title: 'Owner Name',
+          dataIndex: 'owner_info',
+          key: 'contact_by',
+          render:(data)=>{
+console.log(data);
+            return <h6>{data.contact_by}</h6>
+          }
         },
         {
-            title: 'Area',
-            dataIndex: 'property_info',
-            key: 'Area',
+            title: 'Location',
+            dataIndex: 'owner_info',
+            key: 'owner_info',
             render:(data)=>{
 
-              return <h6>{data.super_area}&nbsp;sqft</h6>
+              return <h6>{data.owner_locality}</h6>
             }
           },
   

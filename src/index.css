@@ -77,7 +77,7 @@
   
   .ant-layout.ant-layout-has-sider > .ant-layout {
     overflow-y: auto !important;
-    height: 100vh!important;
+    height: 100%!important;
   }
   
   

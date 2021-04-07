@@ -35,19 +35,20 @@ export default function Datatable({data}) {
 
 
     const columns = [
+      
+      {
+        title: 'Customer Id',
+        dataIndex: 'client_id',
+        key: 'client_id',
+      },
         {
-          title: 'client Name',
+          title: 'Name',
           dataIndex: 'client_name',
           key: 'client_name',
           sorter: (a, b) => a.client_name.length - b.client_name.length,
           sortDirections: ['descend', 'ascend'],
         },
         
-        {
-          title: 'Customer Id',
-          dataIndex: '_id',
-          key: '_id',
-        },
         {
           title: 'phone Number',
           dataIndex: 'phone_number',
@@ -59,20 +60,44 @@ export default function Datatable({data}) {
           key: 'email',
         },
         {
+            title: 'Requirement',
+            dataIndex: 'client_requirement',
+            key: 'client_requirement',
+          },
+          {
+            title: 'Budget',
+            dataIndex: 'bugjet_info',
+            render:(budjet =>{
+              console.log(budjet);
+          return   <p>{budjet.bugjet_price}</p>
+            }),
+            key: 'client_requirement',
+          }, 
+        {
             title: 'customer_type',
             dataIndex: 'customer_type',
             key: 'customer_type',
           },
+          
+        {
+            title: 'Location ',
+            dataIndex: 'location',
+            render:(loc =>{
+     
+          return   <p>{loc.locality}</p>
+            }),
+            key: 'customer_type',
+          },
           {
-            title: 'Furnist',
+            title: 'Furnished',
             dataIndex: 'isFurnist',
             filters: [
               {
-                text: 'furnist',
+                text: 'Furnished ',
                 value: true,
               },
               {
-                text: 'non-furnist',
+                text: 'Unfurnished',
                 value: false,
               }
             ],

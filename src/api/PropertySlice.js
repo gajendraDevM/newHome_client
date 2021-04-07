@@ -261,24 +261,45 @@ setTimeout(() => {
 
 
 
-export const fetchFilter = (filterword=null, search=null) => async dispatch =>{
+export const fetchFilter = (filterword=null,  bhk= null, price=null, filter = null) => async dispatch =>{
   const key = 'update';
   dispatch(getProperty())
   
+// if(filter) {
+
+
+//   return   dispatch(getPropertySuccess(filter))
+
+
+// }
 
   try {
-      
-      const {data} = await axios.get(keyUri + `/api/property/filter?filterword=${filterword}&search=${search}`)
-     
+    if(price){
+
+      const {data} = await axios.get(keyUri + `/api/property/filter?filterword=${filterword}&bhk=${bhk}&price1=${price[0]}&price2=${price[1]}`)
       dispatch(getPropertySuccess(data))
+
+      
+    }else if(bhk) {
+
+      const {data} = await axios.get(keyUri + `/api/property/filter?filterword=${filterword}&bhk=${bhk}`)
+      dispatch(getPropertySuccess(data))
+
+
+    } else {
+      
+      const {data} = await axios.get(keyUri + `/api/property/filter?filterword=${filterword}`)
+      dispatch(getPropertySuccess(data))
+
+    }
 
   } catch (error) {
 
-dispatch(getPropertyError())
-setTimeout(() => {
+// dispatch(getPropertyError())
+// setTimeout(() => {
 
-  message.error({ content: error.response.data.msg, key, duration: 2 });
-}, 100) 
+//   message.error({ content: error.response.data.msg, key, duration: 2 });
+// }, 100) 
 
       
   }

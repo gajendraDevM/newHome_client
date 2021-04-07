@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Tabs, Row, Slider, Modal, Image, Col, Radio, Button, Drawer } from 'antd';
-import { fetchAllpropertys, fethFilterWithBetween, propertySelector } from '../../../api/PropertySlice'
+import { fetchAllpropertys, fetchFilter, fethFilterWithBetween, propertySelector } from '../../../api/PropertySlice'
 import { useDispatch, useSelector } from 'react-redux';
 import SpinLoading from '../../shared/spin';
 import styled from 'styled-components'
@@ -11,6 +11,9 @@ import { Empty } from 'antd';
 import empltyimg from '../../../images/property.png'
 const { Search } = Input;
  const { TabPane } = Tabs;
+
+
+
 export default function Propertytab() {
 
 const dispatch = useDispatch()
@@ -18,10 +21,8 @@ const {loading, property} = useSelector(propertySelector)
 const [isModalVisible, setIsModalVisible] = useState(false);
 const [tabkey, setTabkey] = useState(false);
 const [filterProperty, setFilterProperty] = useState([])
-const [filterPropertyBhk, setFilterPropertyBhk] = useState([])
 
 const [filterActive, setFilterActive] = useState(false)
-const [currentTab, setCurrentTab] = useState([])
 const [gallery, setGallery] = useState([])
    useEffect(()=>{
 
@@ -47,7 +48,6 @@ setGallery(property_gallery);
 
 
 }
-
 
 const PropertyCard = ({property_gallery,owner_info, property_type, property_name,price_info, furnished_info,  property_info}) =>{
 
@@ -639,25 +639,13 @@ h6{
 `
 
 const [client_type, setClient] = useState('rent')
+const [bhk, setBhk] = useState()
 
 
 const onAfterChange  = (value, filter) => {
 
- 
-
-  const f = property.filter(item =>{
-
-if(item.property_type.client_catagory === client_type) {
-
   
-  return item.property_info.project_price <= value[1] && item.property_info.project_price >= value[0]
-
-}
-
-  })
-
-
-setFilterProperty(f)
+  dispatch(fetchFilter(client_type, bhk, value)) 
 
 }
 
@@ -682,29 +670,19 @@ let L = (client_type === 'seller') ? 'Cr' : 'L'
 
 const handleFilterBHK = (value) =>{
 
-const fg = filterProperty.filter((item)=>{
- console.log(value, item.property_info.bed_room);
-    return item.property_info.bed_room <= value 
-  
-  })
-
-  setFilterPropertyBhk(fg)
+  setBhk(value)
+  dispatch(fetchFilter(client_type, value)) 
 
 }
 
 
 const onChange = e => {
+
+ dispatch(fetchFilter(e.target.value)) 
+
   setClient(e.target.value);
-const filterbyclient =  property.filter(item=>{
-
-
-        return item.property_type.client_catagory === e.target.value
-
   
 
-  })
-
-  setFilterProperty(filterbyclient);
 
 };
 
@@ -719,9 +697,9 @@ const filterbyclient =  property.filter(item=>{
     {
 
 
-    loading ? <SpinLoading/> : filterActive ? filterProperty.length < 1 ? <Empty 
+    loading ? <SpinLoading/> : filterActive ? property.length < 1 ? <Empty 
     image={<img className="block mx-auto mt-10 opacity-40" src={empltyimg} alt="empty" />}
-    description={<h5 className="text-xl opacity-20" >No Property Availaible!</h5>}/> : filterProperty.map((item, i)=>{
+    description={<h5 className="text-xl opacity-20" >No Property Availaible!</h5>}/> : property.map((item, i)=>{
 
    
 
@@ -748,11 +726,9 @@ const filterbyclient =  property.filter(item=>{
     {
 
 
-    loading ? <SpinLoading/> : filterActive ? filterProperty.length < 1 ? <Empty 
+    loading ? <SpinLoading/> : filterActive ? property.length < 1 ? <Empty 
     image={<img className="block mx-auto mt-10 opacity-40" src={empltyimg} alt="empty" />}
-    description={<h5 className="text-xl opacity-20" >No Property Availaible!</h5>}/> : filterProperty.map((item, i)=>{
-
-   
+    description={<h5 className="text-xl opacity-20" >No Property Availaible!</h5>}/> : property.map((item, i)=>{
 
       return  <PropertyCard {...item} key={i}/>  
 
@@ -782,10 +758,10 @@ const filterbyclient =  property.filter(item=>{
 
     <TabPane tab="Wharehouse" key="wharehouse">
     {
-    loading ? <SpinLoading/> : filterActive ? filterProperty.map((item, i)=>{
+    loading ? <SpinLoading/> : filterActive ? property.map((item, i)=>{
 
 
-      return filterProperty.length > 0 ? <PropertyCard {...item} key={i}/> : <h5 className="my-10">No Property Availaible !</h5>
+      return property.length > 0 ? <PropertyCard {...item} key={i}/> : <h5 className="my-10">No Property Availaible !</h5>
 
     }) :   property.map((item, i)=>{
 
@@ -813,12 +789,32 @@ const filterbyclient =  property.filter(item=>{
 
 <br/>
 <br/>
-<SearchSelect tabtitle={tabkey} filter="furnished_status"/>
+<SearchSelect tabtitle={tabkey} filter="furnished_status" client_type={client_type}/>
 
 <br/><br/>
 
+<h4>Filter By BedRoom</h4>
+<Slider
+   disabled={filterActive ? false : true}
+   step={1}
+      min={1}
+      max={10}
+    defaultValue={2}
+      onAfterChange={handleFilterBHK}
+      marks ={
+        {2: '2',
+         4:'4',
+         6:'6',
+         8:'8',
+         10:'10'
 
+       
+       
+        }}
 
+    />
+
+<br/><br/>
 
 <Slider
 disabled={filterActive? false : true}
@@ -844,26 +840,7 @@ disabled={filterActive? false : true}
 
 <br/><br/>
 
-<h4>Filter By BedRoom</h4>
-<Slider
-   disabled={filterActive ? false : true}
-   step={1}
-      min={1}
-      max={10}
-    defaultValue={2}
-      onAfterChange={handleFilterBHK}
-      marks ={
-        {2: '2',
-         4:'4',
-         6:'6',
-         8:'8',
-         10:'10'
 
-       
-       
-        }}
-
-    />
 
 
  

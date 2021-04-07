@@ -1,15 +1,18 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Form, Input, Button, Select, Radio, Space } from 'antd';
-import {clientSelector, createClient} from '../../../api/clientSlice'
+import { createClient} from '../../../api/clientSlice'
 import {useDispatch, useSelector} from 'react-redux'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {PropertySettingSelector,  fetchAllSettings} from '../../../api/propertySettings'
+
+
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 
 
-const phoneMsg = ["home", "work", "main", "other"]
+const phoneMsg = ["Home", "Office", "Work", "Other"]
 
 
 const layout = {
@@ -44,14 +47,30 @@ const layout = {
     },
   };
 export default function Createclient() {
+  const dispatch = useDispatch()
+
+
+  useEffect(()=>{
+
+    dispatch(fetchAllSettings())
+  
+  }, [dispatch])
+
+
+
+
+  const { settings } = useSelector(PropertySettingSelector)
+
+
+
 
     const [form] = Form.useForm();
- const dispatch = useDispatch()
 //  const {loadnig} = useSelector()
 
     const onFinish = (values) => {
-        console.log('Success:', values);
-        dispatch(createClient(values))
+
+      dispatch(createClient(values))
+
         form.resetFields()
       };
 
@@ -61,7 +80,14 @@ export default function Createclient() {
       };
 
 
-   
+       const prefixSelector = (
+          <Form.Item name="prefix" noStyle>
+            <Select defaultValue="Lac" style={{ width: 70 }}>
+              <Option value="Lac">Lac</Option>
+              <Option value="Cr">Cr</Option>
+            </Select>
+          </Form.Item>
+        );
 
     return (
         <div>
@@ -70,21 +96,56 @@ export default function Createclient() {
       name="basic"
       form={form}
       initialValues={{
-        remember: true
+        remember: true,
+        prefix: 'Lac',
 
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
       <Form.Item
-        label="Username"
+        label="Name"
         name="client_name"
         rules={[
           {
             required: true,
-            message: 'Please input your username!',
+            message: 'Please input your Name!',
           },
         ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Company Name"
+        name="company_name"
+      >
+        <Input />
+      </Form.Item>
+
+           <Form.Item
+        label="Client Requirement"
+        name="client_requirement"
+      >
+
+     <Select style={{ width: 270 }} >
+   
+   {  settings.map((item, i)=>{
+
+return <option key={i} value={item.property}>{item.property}</option>
+
+})}
+
+
+    </Select> 
+
+
+
+      </Form.Item>
+
+ <Form.Item
+        label="Client ID"
+        name="client_id"
       >
         <Input />
       </Form.Item>
@@ -92,12 +153,11 @@ export default function Createclient() {
       <Form.Item   
        name="phone_number"
        label="Phone"
-       rules={[
-         {
-           required: true,
-           message: 'Please input your phone number!',
-         },
-       ]}
+       rules={[{ required: true },
+        {min: 10},
+        {max:10},
+        {pattern:"[0-9]", message:"Only Numbers"}
+        ]}
      >
        <Input
           addonBefore="+91"
@@ -130,12 +190,11 @@ export default function Createclient() {
                
         name={field.name }
         label={ field.name > 3 ? `other${field.name}` :  phoneMsg[field.name]   }
-        rules={[
-          {
-            required: true,
-            message: 'Please input your phone number!',
-          },
-        ]}
+        rules={[{ required: true },
+          {min: 10},
+          {max:10},
+          {pattern:"[0-9]", message:"Only Numbers"}
+          ]}
       >
         <Input
           addonBefore="+91"
@@ -151,7 +210,7 @@ export default function Createclient() {
             ))}
         <Form.Item {...tail3Layout}>
               <Button type="dashed" className="ml-2"   onClick={() => add()} block icon={<PlusOutlined />}>
-                Add field
+                Add Phone Number
               </Button>
             </Form.Item>
 
@@ -177,7 +236,62 @@ export default function Createclient() {
         <Input />
       </Form.Item>
 
+      <Form.Item    {...tail2Layout}> 
+      <Form.List name="other_emails" >
+        {(fields, { add, remove }) => (
+          <>
 
+      {fields.map(field => (
+              <Space key={field.key}   style={{width:"100%"}}  align="baseline">
+              
+                <Form.Item
+                
+                style={{width:"100%"}}
+                 {...field}
+                 fieldKey={[field.fieldKey, 'other_emails']}
+               
+        name={field.name }
+        label={`Email ${field.name + 1}`}
+     
+      >
+        <Input
+  
+          style={{
+            width: '100%',
+          }}
+        />
+      </Form.Item>
+             
+                <MinusCircleOutlined onClick={() => remove(field.name)} />
+              </Space>
+            ))}
+        <Form.Item {...tail3Layout}>
+              <Button type="dashed" className="ml-2"   onClick={() => add()} block icon={<PlusOutlined />}>
+                Add Emails
+              </Button>
+            </Form.Item>
+
+            </>
+        )}
+      </Form.List>
+      </Form.Item>
+
+      <Form.Item
+        label="Budget"
+        name={['bugjet_info', 'bugjet_price']}
+        rules={[
+          {
+            required: true,
+            message:  ' is Required ',
+          },
+        ]}
+     
+      >
+
+     
+      <Input
+       placeholder="in ruppes" addonBefore={prefixSelector} style={{ width: '50%' }}  />
+      </Form.Item>
 
 
       <Form.Item
@@ -190,7 +304,7 @@ export default function Createclient() {
           },
         ]}
       >
-        <TextArea rows={3} />
+        <TextArea rows={2} />
       </Form.Item>
 
       <Form.Item name="customer_type" label="Customer_type" rules={[{ required: true }]}>
@@ -200,6 +314,8 @@ export default function Createclient() {
         >
           <Option value="Seller">Seller</Option>
           <Option value="Buyer">Buyer</Option>
+          <Option value="builder">builder</Option>
+          <Option value="agent">agent</Option>
      
         </Select>
       </Form.Item>
@@ -208,11 +324,11 @@ export default function Createclient() {
         <Input.Group compact>
 
         <Form.Item
-            name={['location', 'district']}
+            name={['location', 'locality']}
             noStyle
             rules={[{ required: true, message: 'Street is required' }]}
           >
-            <Input  style={{ width: '40%' }} placeholder="district" />
+            <Input  style={{ width: '40%' }} placeholder="locality" />
           </Form.Item>
 
           <Form.Item
@@ -257,14 +373,21 @@ export default function Createclient() {
       </Form.Item>
 
 
-      <Form.Item name="isFurnist" label="furnist">
+      <Form.Item name="isfurnished" label="furnished">
         <Radio.Group>
-          <Radio value="furnista">furnist</Radio>
-          <Radio value="non-furnist">non-furnist</Radio>
+          <Radio value="furnished">furnished</Radio>
+          <Radio value="unfurnished">unfurnished</Radio>
         
         </Radio.Group>
       </Form.Item>
 
+      <Form.Item
+        label="Comment"
+        name="comment"
+     
+      >
+        <TextArea rows={3} />
+      </Form.Item>
 
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">

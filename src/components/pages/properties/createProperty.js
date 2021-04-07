@@ -64,7 +64,6 @@ const { client, current_client } = useSelector(clientSelector)
   }, [dispatch])
 
 
-console.log(settings);
 
 let commercial = settings.filter( item=>{
 
@@ -211,12 +210,7 @@ const [current_c, setCurrentC] = useState(null)
       <Form.Item
         label="project Name"
         name="project_name"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your project!',
-          },
-        ]}
+      
       >
         <Input   placeholder="project name" />
       </Form.Item>
@@ -1170,11 +1164,7 @@ rules={[
   {
     type: 'email',
     message: 'The input is not valid E-mail!',
-  },
-  {
-    required: true,
-    message: 'Please input your E-mail!',
-  },
+  }
 ]}
 >
 <Input  style={{ width: '100%' }} placeholder="email"/>
@@ -1228,7 +1218,7 @@ rules={[
 
 
 
-<Form.Item name="description"  rules={[{ required: true }]}>
+<Form.Item name="description">
 <TextArea rows={3} placeholder="description"  />
 </Form.Item>
 </>

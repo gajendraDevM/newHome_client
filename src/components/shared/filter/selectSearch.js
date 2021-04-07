@@ -3,14 +3,19 @@ import { Select } from 'antd';
 import {fetchFilter, propertySelector} from '../../../api/PropertySlice'
 import {useDispatch, useSelector} from 'react-redux'
 const { Option } = Select;
-export default function SelectSearch({filter, key}) {
+export default function SelectSearch({filter, client_type}) {
 
 
 const dispatch = useDispatch()
 const {property} = useSelector(propertySelector)
     function onChange(value) {
+return
+    //   const filterproperty = property.filter(item =>{
 
-    dispatch(fetchFilter(filter, value, key))
+    //     return item.furnished_info.furnished_status === value
+    //   }) 
+
+    // dispatch(fetchFilter(client_type, null, null, filterproperty))
       }
       
       function onBlur() {

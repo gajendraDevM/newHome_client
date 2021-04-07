@@ -29,7 +29,7 @@ const dispatch = useDispatch()
 
     return (
          <HeaderMenuWrap>
-        <Header className="site-layout-background" style={{ padding: 0 }}>
+        <Header className="site-layout-background shadow-sm" style={{ padding: 0 }}>
         <div className="d-flex flex-end"> 
 
       {collapsed ?

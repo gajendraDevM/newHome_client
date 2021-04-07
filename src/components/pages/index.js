@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Layout } from 'antd';
+import { Layout, Affix } from 'antd';
 import styled from 'styled-components'
 import SideBar from './sidebar'
 import Header from './header'
@@ -17,6 +17,7 @@ import {authenticateSelector} from '../../api/authSlice'
 import CreateEmployee from './employees/createEmployee';
 import Employee from './employees';
 
+import PropertyEdit from './properties/editProperty';
 
 import Property from './properties/createProperty';
 import PropertyList from './properties';
@@ -69,12 +70,14 @@ else{
         <AdminWrap color={theme}>
         <Layout>
      
+        <Affix offsetTop={0} onChange={affixed => console.log(affixed)}>
      <SideBar collapsed={collapsed} color={theme}  click={changeTheme}/>
-     
+     </Affix>
 
         <Layout className="site-layout">
-        
+        <Affix offsetTop={0} onChange={affixed => console.log(affixed)}>
         <Header click={toggle} collapsed={collapsed}/>
+        </Affix>
           <Content
             className="site-layout-background"
             style={{
@@ -96,6 +99,8 @@ else{
 
 <Route  exact path={`${path}/property`}  component={PropertyList} />
 <Route  exact path={`${path}/create-property`}  component={Property} />
+<Route  exact path={`${path}/property/:id`}  component={PropertyEdit} />
+
 <Route  exact path={`${path}/property-tab`}  component={Propertytab} />
 <Route  exact path={`${path}/intial-setting`}  component={Propertytab} />
 <Route  exact path={`${path}/admin-setting`}  component={Setting} />
@@ -118,7 +123,7 @@ const AdminWrap = styled.div`
 .ant-layout {
 
 .ant-layout-sider{
-    height: 100vh;
+    height: 101vh;
     overflow-y: auto;
 
     background:${props => props.color ? "#001529" : "#ffffff"};
