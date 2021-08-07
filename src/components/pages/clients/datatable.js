@@ -78,15 +78,15 @@ export default function Datatable({data}) {
             key: 'customer_type',
           },
           
-        {
-            title: 'Location ',
-            dataIndex: 'location',
-            render:(loc =>{
+        // {
+        //     title: 'Location ',
+        //     dataIndex: 'location',
+        //     render:(loc =>{
      
-          return   <p className="mb-0">{loc.locality}</p>
-            }),
-            key: 'customer_type',
-          },
+        //   return   <p className="mb-0">{loc.locality}</p>
+        //     }),
+        //     key: 'customer_type',
+        //   },
           {
             title: 'Furnished',
             dataIndex: 'isfurnished',

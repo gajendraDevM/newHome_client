@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Form, Input, Button, Select, Radio, Space } from 'antd';
 import { createClient} from '../../../api/clientSlice'
 import {useDispatch, useSelector} from 'react-redux'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {PropertySettingSelector,  fetchAllSettings} from '../../../api/propertySettings'
+import axios from 'axios';
+import BACK_END_URI from '../../../key';
 
 
 
@@ -46,16 +48,26 @@ const layout = {
       span: 10,
     },
   };
+
+
+
 export default function Createclient() {
   const dispatch = useDispatch()
-
+const [locality, setLocality] = useState([])
+const [localities, setLocalities] = useState([])
 
   useEffect(()=>{
 
     dispatch(fetchAllSettings())
+    axios.get(BACK_END_URI + '/api/locality').then(({data})=>{
+
+     
+      setLocalities(data)
+
+    })
+
   
   }, [dispatch])
-
 
 
 
@@ -71,7 +83,7 @@ export default function Createclient() {
 
       dispatch(createClient(values))
 
-        form.resetFields()
+        // form.resetFields()
       };
 
 
@@ -80,14 +92,14 @@ export default function Createclient() {
       };
 
 
-       const prefixSelector = (
-          <Form.Item name="prefix" noStyle>
-            <Select defaultValue="Lac" style={{ width: 70 }}>
-              <Option value="Lac">Lac</Option>
-              <Option value="Cr">Cr</Option>
-            </Select>
-          </Form.Item>
-        );
+      //  const prefixSelector = (
+      //     <Form.Item name="prefix" noStyle>
+      //       <Select defaultValue="Lac" style={{ width: 70 }}>
+      //         <Option value="Lac">Lac</Option>
+      //         <Option value="Cr">Cr</Option>
+      //       </Select>
+      //     </Form.Item>
+      //   );
 
     return (
         <div>
@@ -113,14 +125,14 @@ export default function Createclient() {
           },
         ]}
       >
-        <Input />
+        <Input style={{textTransform:"uppercase"}} />
       </Form.Item>
 
       <Form.Item
         label="Company Name"
         name="company_name"
       >
-        <Input />
+        <Input style={{textTransform:"uppercase"}} />
       </Form.Item>
 
            <Form.Item
@@ -290,7 +302,7 @@ return <option key={i} value={item.property}>{item.property}</option>
 
      
       <Input
-       placeholder="in ruppes" addonBefore={prefixSelector} style={{ width: '50%' }}  />
+       placeholder="in ruppes"  style={{ width: '50%' }}  />
       </Form.Item>
 
 
@@ -320,26 +332,31 @@ return <option key={i} value={item.property}>{item.property}</option>
         </Select>
       </Form.Item>
 
-      <Form.Item label="location">
-        <Input.Group compact>
+   
 
         <Form.Item
-            name={['location', 'locality']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
+            name='location'
+            rules={[{ required: true, message: 'locality is required' }]}
+            label="Locality"
           >
-            <Input  style={{ width: '40%' }} placeholder="locality" />
+                <Select
+               value={locality} 
+      mode="multiple"
+      allowClear
+      style={{ width: '100%' }}
+      placeholder="Please select"
+      onChange={(value)=>setLocality(value)}
+    >
+   {
+     localities.map((item, i)=>{
+
+      return <Option value={item.locality} key={i}>{item.locality}</Option>
+     })
+   }
+    </Select>
           </Form.Item>
 
-          <Form.Item
-            name={['location', 'state']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
-          >
-            <Input  style={{ width: '40%', marginLeft:"1rem" }} placeholder="state" />
-          </Form.Item>
-        </Input.Group>
-      </Form.Item>
+       
 
 
       <Form.Item label="Property Size">
@@ -353,7 +370,7 @@ return <option key={i} value={item.property}>{item.property}</option>
             <Input  style={{ width: '30%' }} placeholder="sqft" />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name={['property_size', 'cm']}
             noStyle
             rules={[{ required: true, message: 'Street is required' }]}
@@ -367,7 +384,7 @@ return <option key={i} value={item.property}>{item.property}</option>
             rules={[{ required: true, message: 'Street is required' }]}
           >
             <Input  style={{ width: '30%', marginLeft:"1rem" }} placeholder="feet" />
-          </Form.Item>
+          </Form.Item> */}
 
         </Input.Group>
       </Form.Item>

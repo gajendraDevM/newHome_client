@@ -8,14 +8,16 @@ export default function SelectSearch({filter, client_type}) {
 
 const dispatch = useDispatch()
 const {property} = useSelector(propertySelector)
+
+
     function onChange(value) {
-return
-    //   const filterproperty = property.filter(item =>{
 
-    //     return item.furnished_info.furnished_status === value
-    //   }) 
+      const filterproperty = property.filter(item =>{
 
-    // dispatch(fetchFilter(client_type, null, null, filterproperty))
+        return item.furnished_info.furnished_status === value
+      }) 
+
+    dispatch(fetchFilter(client_type, null, null, filterproperty))
       }
       
       function onBlur() {

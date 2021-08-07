@@ -55,44 +55,50 @@ useEffect(()=>{
 
     dispatch(fetchOneClient(id))
 
-    current_client &&   form.setFieldsValue({
-         client_name: current_client.client_name,
-         phone_number: current_client.phone_number,
-         client_requirement: current_client.client_requirement,
-         comment: current_client.comment,
-         company_name: current_client.company_name,
-         customer_type: current_client.customer_type,
-          client_id: current_client.client_id,
-          isfurnished: current_client.isfurnished,
-
-
-        email: current_client.email,
-        address: current_client.address,
-        customer_type: current_client.customer_type,
-        other_phone:current_client.other_phone,
-        other_emails:current_client.other_emails,
-
-        location: {
-          locality:current_client.location.locality,
-            state:current_client.location.state
-        },
-        bugjet_info : {
-          bugjet_price:current_client.bugjet_info.bugjet_price
-        },
-        
-        property_size:{
-
-            sqft:current_client.property_size.sqft,
-           cm:current_client.property_size.cm,
-           feet:current_client.property_size.feet,
-
-        },
-    
-
-      });
+  
 
 
 }, [dispatch])
+
+useEffect(()=>{
+
+  current_client &&   form.setFieldsValue({
+    client_name: current_client.client_name,
+    phone_number: current_client.phone_number,
+    client_requirement: current_client.client_requirement,
+    comment: current_client.comment,
+    company_name: current_client.company_name,
+    customer_type: current_client.customer_type,
+     client_id: current_client.client_id,
+     isfurnished: current_client.isfurnished,
+
+
+   email: current_client.email,
+   address: current_client.address,
+   customer_type: current_client.customer_type,
+   other_phone:current_client.other_phone,
+   other_emails:current_client.other_emails,
+
+   location: {
+     locality:current_client.location.locality,
+       state:current_client.location.state
+   },
+   bugjet_info : {
+     bugjet_price:current_client.bugjet_info.bugjet_price
+   },
+   
+   property_size:{
+
+       sqft:current_client.property_size.sqft,
+      cm:current_client.property_size.cm,
+      feet:current_client.property_size.feet,
+
+   },
+
+
+ });
+
+}, [current_client])
 
 
 

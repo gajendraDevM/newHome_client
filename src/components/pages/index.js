@@ -15,6 +15,9 @@ import ClientUpdate from '../pages/clients/editClient'
 import {useDispatch, useSelector} from 'react-redux'
 import {authenticateSelector} from '../../api/authSlice'
 import CreateEmployee from './employees/createEmployee';
+import EditEmployee from './employees/editEmployee';
+import AddSalary from './employees/salary/addSalary';
+
 import Employee from './employees';
 
 import PropertyEdit from './properties/editProperty';
@@ -95,7 +98,10 @@ else{
 <Route  exact path={`${path}/client/:id`}  component={ClientUpdate} />
 
 <Route  exact path={`${path}/create-employee`}  component={CreateEmployee} />
+<Route  exact path={`${path}/employee/:id`}  component={EditEmployee} />
+
 <Route  exact path={`${path}/employee`}  component={Employee} />
+<Route  exact path={`${path}/create-salary`}  component={AddSalary} />
 
 <Route  exact path={`${path}/property`}  component={PropertyList} />
 <Route  exact path={`${path}/create-property`}  component={Property} />

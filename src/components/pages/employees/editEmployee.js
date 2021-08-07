@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react'
-import { Form, Input, Button, Select, Radio } from 'antd';
-import {clientSelector, fetchOneClient, editClient} from '../../../api/clientSlice'
+import React, {useEffect, useState} from 'react'
+import { Form, Input, Upload, Button, Select, Radio } from 'antd';
+import {employeeSelector, editEmployee, fetchOneEmployee} from '../../../api/empSlice'
 import {useDispatch, useSelector} from 'react-redux'
+import keyUri from '../../../key'
+import { CloudUploadOutlined  } from '@ant-design/icons';
 import {useParams} from 'react-router-dom'
 const { Option } = Select;
 const { TextArea } = Input;
@@ -9,96 +11,134 @@ const { TextArea } = Input;
 
 
 const layout = {
-    labelCol: {
-      span: 3,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
+  labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 10,
+  },
+};
 
 
-  const tailLayout = {
-    wrapperCol: {
-      offset: 3,
-      span: 16,
-    },
-  };
+const tailLayout = {
+  wrapperCol: {
+    offset: 4,
+    span: 10,
+  },
+};
 
 
-export default function Createclient() {
 
-    const [form] = Form.useForm();
- const dispatch = useDispatch()
- const {loadnig, current_client} = useSelector(clientSelector)
+export default function EditEmployee() {
 
-const { id } = useParams()
+  const [form] = Form.useForm();
+  const dispatch = useDispatch()
+ 
+  const [imge, setImge] = useState(null)
+  const [id_imge, setIDImge] = useState(null)
+ const {id} = useParams()
+const {current_employee, loading} = useSelector(employeeSelector)
 
-useEffect(()=>{
+ useEffect(()=>{
 
-    dispatch(fetchOneClient(id))
+  dispatch(fetchOneEmployee(id))
 
-    current_client &&   form.setFieldsValue({
-        client_name: current_client.client_name,
-        phone_number: current_client.phone_number,
-        email: current_client.email,
-        address: current_client.address,
-        customer_type: current_client.customer_type,
 
-        location: {
-            district:current_client.location.district,
-            state:current_client.location.state
-        },
+ }, [dispatch])
+
+
+ useEffect(()=>{
+
+  current_employee && form.setFieldsValue({
+
+    employee_name:current_employee.employee_name,
+    employee_id:current_employee.employee_id,
+    designation:current_employee.designation,
+    salary_date:current_employee.salary_date,
+    sallary:current_employee.sallary,  
+  
+    email:current_employee.email,
+    phone_number:current_employee.phone_number,
+    address:current_employee.address,
+
+  })
+
+  current_employee &&  setImge(current_employee.image)
+  current_employee && setIDImge(current_employee.image_id)
+ }, [current_employee])
+ 
+
+ 
+     const onFinish = (values) => {
+         console.log('Success:', values);
+ 
+         values.image = imge
+         values.image_id = id_imge
+ 
+         dispatch(editEmployee(current_employee._id, values))
+         // form.resetFields()
+       };
+ 
+ 
+ 
+       const handleImage = () =>{
+ 
+     
+         window.cloudinary.openUploadWidget({ cloud_name: "gajendra", upload_preset: "redux_twinepidemic"},
+         function(error, result) {
+               result && setImge(result[0]?.url)
+         })
         
-        property_size:{
+        
+          }
+ 
+ 
+       const handleIDImage = () =>{
+ 
+     
+         window.cloudinary.openUploadWidget({ cloud_name: "gajendra", upload_preset: "redux_twinepidemic"},
+         function(error, result) {
+               result && setIDImge(result[0]?.url)
+            
+         })
+        
+        
+          }
+ 
+       const onFinishFailed = (errorInfo) => {
+         console.log('Failed:', errorInfo);
+       };
+ 
+ 
+ 
+ 
+ 
+       const prefixSelector = (
+         <Form.Item name="prefix" noStyle>
+           <Select
+             style={{
+               width: 70,
+             }}
+           >
+             <Option value="91">+91</Option>
+             <Option value="1">+1</Option>
+ 
+             <Option value="87">+87</Option>
+           </Select>
+         </Form.Item>
+       );
 
-            sqft:current_client.property_size.sqft,
-           cm:current_client.property_size.cm,
-           feet:current_client.property_size.feet,
 
-        },
-        // isFurnist: current_client && current_client.isFurnist? true : false
-    
+if(loading) {
 
-      });
+  return <h1>Loading.....</h1>
+}
 
 
-}, [dispatch])
 
-
-    const onFinish = (values) => {
-        // console.log('Success:', values);
-
-
-        dispatch(editClient(id, values))
-        form.resetFields()
-      };
-
-
-      const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-      };
-
-
-      const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-          <Select
-            style={{
-              width: 70,
-            }}
-          >
-            <Option value="91">+91</Option>
-            <Option value="1">+1</Option>
-
-            <Option value="87">+87</Option>
-          </Select>
-        </Form.Item>
-      );
-
-    return (
-        <div>
-          
-          { current_client &&       <Form
+  return (
+   <>   { !loading && <div>
+                <Form
       {...layout}
       name="basic"
       form={form}
@@ -111,8 +151,8 @@ useEffect(()=>{
       onFinishFailed={onFinishFailed}
     >
       <Form.Item
-        label="Username"
-        name="client_name"
+        label="employee_name"
+        name="employee_name"
         rules={[
           {
             required: true,
@@ -122,6 +162,90 @@ useEffect(()=>{
       >
         <Input />
       </Form.Item>
+
+      <Form.Item
+        label="employee_id"
+        name="employee_id"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your username!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="designation"
+        name="designation"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your username!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="salary_date"
+        name="salary_date"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your username!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="sallary"
+        name="sallary"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your username!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="image"
+        label="Image"
+        valuePropName="file"
+       
+      >
+        {/* <Upload name="image" action={keyUri + `/api/upload`} listType="picture"> */}
+          <Button type="primary" onClick={handleImage} icon={<CloudUploadOutlined className=" text-xl text-green-600" />}> upload</Button> <br/>
+
+          {current_employee && <img className="my-4" src={imge} alt="imgee" width="120px"/>}
+
+        {/* </Upload> */}
+      </Form.Item>
+
+ 
+
+        <Form.Item
+        name="image_id"
+        label="Id image"
+   
+      >
+        {/* <Upload name="image" action={keyUri + `/api/upload`} listType="picture"> */}
+          <Button type="primary" onClick={handleIDImage} icon={<CloudUploadOutlined className=" text-xl text-green-600" />}> upload</Button> <br/>
+
+          {id_imge && <img className="my-4" src={id_imge} alt="imgee" width="120px"/>}
+
+        {/* </Upload> */}
+      </Form.Item>
+
+
+
 
       <Form.Item
         name="email"
@@ -172,78 +296,6 @@ useEffect(()=>{
         <TextArea rows={3} />
       </Form.Item>
 
-      <Form.Item name="customer_type" label="Customer_type" rules={[{ required: true }]}>
-        <Select
-          placeholder="Select Customer type"
-          allowClear
-        >
-          <Option value="male">Seller</Option>
-          <Option value="female">Buyer</Option>
-     
-        </Select>
-      </Form.Item>
-
-      <Form.Item label="location">
-        <Input.Group compact>
-
-        <Form.Item
-            name={['location', 'district']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
-          >
-            <Input  style={{ width: '40%' }} placeholder="district" />
-          </Form.Item>
-
-          <Form.Item
-            name={['location', 'state']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
-          >
-            <Input  style={{ width: '40%', marginLeft:"1rem" }} placeholder="state" />
-          </Form.Item>
-        </Input.Group>
-      </Form.Item>
-
-
-      <Form.Item label="Property Size">
-        <Input.Group compact>
-
-        <Form.Item
-            name={['property_size', 'sqft']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
-          >
-            <Input  style={{ width: '30%' }} placeholder="sqft" />
-          </Form.Item>
-
-          <Form.Item
-            name={['property_size', 'cm']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
-          >
-            <Input  style={{ width: '30%', marginLeft:"1rem" }} placeholder="cm" />
-          </Form.Item>
-
-          <Form.Item
-            name={['property_size', 'feet']}
-            noStyle
-            rules={[{ required: true, message: 'Street is required' }]}
-          >
-            <Input  style={{ width: '30%', marginLeft:"1rem" }} placeholder="feet" />
-          </Form.Item>
-
-        </Input.Group>
-      </Form.Item>
-
-
-      <Form.Item name="isFurnist"
-      label="furnist">
-        <Radio.Group>
-          <Radio checked={current_client && current_client.isFurnist? true : false} value={true}>furnist</Radio>
-          <Radio checked={current_client && current_client.isFurnist? true : false} value={false}>non-furnist</Radio>
-        
-        </Radio.Group>
-      </Form.Item>
 
 
       <Form.Item {...tailLayout}>
@@ -252,7 +304,7 @@ useEffect(()=>{
         </Button>
       </Form.Item>
     </Form>
-}
-        </div>
-    )
+        </div>}
+        </>
+  )
 }

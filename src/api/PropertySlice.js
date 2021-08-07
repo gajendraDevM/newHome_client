@@ -265,15 +265,16 @@ export const fetchFilter = (filterword=null,  bhk= null, price=null, filter = nu
   const key = 'update';
   dispatch(getProperty())
   
-// if(filter) {
+if(filter !== null){
 
 
-//   return   dispatch(getPropertySuccess(filter))
+  return dispatch(getPropertySuccess(filter))
 
-
-// }
-
+}
   try {
+
+
+
     if(price){
 
       const {data} = await axios.get(keyUri + `/api/property/filter?filterword=${filterword}&bhk=${bhk}&price1=${price[0]}&price2=${price[1]}`)

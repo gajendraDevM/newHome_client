@@ -789,7 +789,7 @@ const onChange = e => {
 
 <br/>
 <br/>
-<SearchSelect tabtitle={tabkey} filter="furnished_status" client_type={client_type}/>
+{/* <SearchSelect tabtitle={tabkey} filter="furnished_status" client_type={client_type}/> */}
 
 <br/><br/>
 

@@ -64,7 +64,9 @@ const {pathname} = useLocation()
  <Menu.Item key="/dashboard/create-employee" >
  <Link to="/dashboard/create-employee">Create Employee</Link> 
    </Menu.Item>
-
+<Menu.Item key="/dashboard/create-salary" >
+ <Link to="/dashboard/create-salary">salary</Link> 
+   </Menu.Item>
  </SubMenu>
 
 

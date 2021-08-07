@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import {Table, Space} from 'antd'
+import {Table, Space, Button} from 'antd'
 import {FaRegEdit,  FaRegTrashAlt, FaTrashAlt} from 'react-icons/fa'
 import {AiOutlineClose} from 'react-icons/ai'
-
 
 import {Link} from 'react-router-dom'
 import { deleteEmployee, deleteManyEmployee} from '../../../api/empSlice'
 import {useDispatch} from 'react-redux'
-// import moment from 'moment'
+import moment from 'moment'
 import DeleteConfirm from '../../shared/deleteConfirm'
 import ExcelBtn from '../../shared/exportExcel'
 import Search from '../../shared/search'
@@ -106,7 +105,10 @@ export default function Datatable({data}) {
         <DataTableWrap>
           <div className=" flex justify-between">
             <Search title="employee"/>
+            <div className=" flex justify-between ">
+           <Button type="ghost" className="mr-3"><Link to="/dashboard/create-salary">Add Sallary</Link></Button>
             <ExcelBtn dataSource={data} columns={columns}/>
+            </div>
         </div>
 
         <motion.div
@@ -131,6 +133,31 @@ export default function Datatable({data}) {
       
       rowKey={record=>record._id}
              dataSource={data} 
+             expandedRowRender={(record)=>{
+
+return<div className="insidetable">
+  <h1 className="text-lg">{record.employee_name} Sallary Details</h1>
+  <table  style={{width:"50%"}}>
+      <tr className=" ">
+        <th>salary Ammount</th>
+        <th>date</th>
+      </tr>
+     
+        {
+          record.salary_info.map((item, i)=>{
+
+            return  <tr key={i}> <td>₹{item.sallary_ammount}/-</td>
+            <td> {moment(item.date).format('MMMM Do YYYY')  }</td></tr>
+          })
+        }
+    
+
+  
+  </table>
+  </div> 
+
+             }}
+
              columns={columns} />
         </DataTableWrap>
     )
@@ -152,7 +179,22 @@ position:relative;
 font-size:1rem;
 
 }
+.insidetable {
+  padding:1rem 0;
+table{
+ border-spacing: 0 !important;
+  
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  background-color: #fff;
+}
 
+}
+ 
+
+}
 
 
 `

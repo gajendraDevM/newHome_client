@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAllEmployees, employeeSelector} from '../../../api/empSlice'
+
 import Loader from '../../shared/spin'
 import DataTable from './datatable'
 import {authenticateSelector} from '../../../api/authSlice'
@@ -17,7 +18,7 @@ dispatch(fetchAllEmployees())
 
 
 }, [dispatch])
-console.log(employee);
+
     return (
         <div>
           {

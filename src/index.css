@@ -56,6 +56,7 @@
     padding: 0.2rem 1rem !important;
     border-bottom: 0px solid #e9b2b9 !important;
     background-color: rgba(143, 104, 112, 0.116) !important;
+    font-size: 1.1rem !important;
   }
   
   .ant-table-thead > tr > th {
@@ -84,7 +85,7 @@
   .ant-table-thead > tr > th {
   
     color: rgba(255, 255, 255, 0.828) !important;
-    font-size: 1rem!important;
+    font-size: 1.2rem!important;
     text-transform: capitalize!important;
     padding: 0.3rem 0.9rem !important;
     border-bottom: 0px solid #f0f0f0!important;
@@ -124,13 +125,18 @@ textarea.ant-input {
   border-radius: 5px;
 }
 
-.ant-input {
+ .ant-input {
 
     box-shadow: 1px 1px 3px 0px #c5bdbd;
   border: 1px solid #ffffff !important;
   border-radius: 5px;
 }
+.site-layout > .ant-input {
 
+  text-transform: capitalize;
+
+
+}
 .ant-input:hover{
 
     border: 1px solid var(--brandColor) !important;
@@ -213,4 +219,9 @@ textarea.ant-input {
 .leftform{
 
   height: 84vh !important;
+}
+
+.ant-form-item-label > label {
+
+  text-transform: capitalize !important;
 }

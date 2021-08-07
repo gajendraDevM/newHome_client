@@ -57,6 +57,7 @@ if(isAuthenticate){
     >
       <Form.Item
         name="email"
+        
         rules={[
           {
             required: true,
@@ -64,7 +65,7 @@ if(isAuthenticate){
           },
         ]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+        <Input   prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
       </Form.Item>
       <Form.Item
         name="password"
@@ -76,6 +77,7 @@ if(isAuthenticate){
         ]}
       >
         <Input
+        
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="Password"
